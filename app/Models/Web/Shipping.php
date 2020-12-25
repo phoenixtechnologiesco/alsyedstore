@@ -90,6 +90,47 @@ class Shipping extends Model
 
     }
 
+    public function getPickupAddress($address_id)
+    {
+
+        $address = DB::table('user_to_address')
+            ->leftjoin('address_book', 'user_to_address.address_book_id', '=', 'address_book.address_book_id')
+            ->leftJoin('countries', 'countries.countries_id', '=', 'address_book.entry_country_id')
+            ->leftJoin('zones', 'zones.zone_id', '=', 'address_book.entry_zone_id')
+            ->select(
+                'user_to_address.is_default as default_address',
+                'address_book.address_book_id as address_id',
+                'address_book.entry_gender as gender',
+                'address_book.entry_company as pickup_company',
+                'address_book.entry_firstname as pickup_firstname',
+                'address_book.entry_lastname as pickup_lastname',
+                'address_book.entry_street_address as pickup_street',
+                'address_book.entry_suburb as suburb',
+                'address_book.entry_postcode as pickup_zip',
+                'address_book.entry_delivery_phone as pickup_phone',
+                'address_book.entry_city as pickup_city',
+                'address_book.entry_state as pickup_state',
+
+                'countries.countries_id as pickup_countries_id',
+                'countries.countries_name as pickup_country_name',
+
+                'zones.zone_id as pickup_zone_id',
+                'zones.zone_code as pickup_zone_code',
+                'zones.zone_name as pickup_zone_name'
+            )
+            ->where('address_book.entry_company', "Al-Syed Store");
+            // ->where('address_book.customers_id', 0);
+
+
+        if (!empty($address_id)) {
+            $address->where('address_book.address_book_id', '=', $address_id);
+        }
+        $result = $address->get();
+
+        return $result;
+
+    }
+
     public function countries()
     {
         $allCountries = DB::table('countries')->get();

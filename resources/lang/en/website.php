@@ -297,6 +297,7 @@ return [
 
 	'Billing Address'=>'Billing Address',
 
+	'Pickup Address'=>'Pickup Address',
 
 
 	'Payment Methods'=>'Payment Methods',

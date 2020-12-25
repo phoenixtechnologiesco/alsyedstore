@@ -3475,6 +3475,13 @@ class LabelValueTableSeeder extends Seeder
                 'language_id' => 4,
                 'label_id' => 1071,
             ),
+            494 => 
+            array (
+                'label_value_id' => 1828,
+                'label_value' => 'Pickup Address',
+                'language_id' => 1,
+                'label_id' => 1118,
+            ),
         ));
         
         

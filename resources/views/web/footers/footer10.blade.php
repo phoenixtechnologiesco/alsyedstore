@@ -6,7 +6,7 @@
                   <div class="container">
                     <div class="row">
                       <div class="col-12">
-                        <img class="img-fluid" src="{{asset('web/images/brands/brands-content.jpg')}}">
+                        {{-- <img class="img-fluid" src="{{asset('web/images/brands/brands-content.jpg')}}"> --}}
                         </div>
                     </div>
                   </div>
@@ -97,7 +97,8 @@
                           </ul>
                         </div>
                         <div class="footer-image mt-4">
-                            <a href="#"><img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}"></a>
+                          Cash On Delivery
+                            {{-- <a href="#"><img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}"></a> --}}
                         </div>
                       </div>
                     </div>
@@ -112,7 +113,7 @@
               <div class="copyright-content">
                   <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-12 col-md-8">
+                        {{-- <div class="col-12 col-md-8">
                           <div class="newsletter">
                             <div class="block">
                               <h5>@lang('website.SUBSCRIBE FOR LATEST UPDATES')</h5>
@@ -132,18 +133,18 @@
                                 </form>
                                 @endif
 
-                              {{-- <h5>@lang('website.Subscribe')</h5>
+                              <h5>@lang('website.Subscribe')</h5>
                               <form class="form-inline">
                                 <div class="search">
                                   <input type="email" name="email" id="email" placeholder="@lang('website.Your email address here')">
                                   <button class="btn-secondary fas fa-location-arrow"  id="subscribe"  type="submit">
                                   </button>
                                 </div>
-                              </form> --}}
+                              </form>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-12 col-md-4">
+                        </div> --}}
+                        <div class="col-12 col-md-12">
                           <div class="footer-info">
                               <p>© @lang('website.Copy Rights').  <a href="{{url('/page?name=refund-policy')}}">@lang('website.Privacy')</a>&nbsp;&bull;&nbsp;<a href="{{url('/page?name=term-services')}}">@lang('website.Terms')</a></p>
                           </div>

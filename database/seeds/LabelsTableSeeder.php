@@ -1247,6 +1247,11 @@ class LabelsTableSeeder extends Seeder
                 'label_id' => 1117,
                 'label_name' => 'Stripe',
             ),
+            246 => 
+            array (
+                'label_id' => 1118,
+                'label_name' => 'Pickup Address',
+            ),
         ));
         
         

@@ -84,6 +84,7 @@ Route::group(['namespace' => 'Web','middleware' => $middleware], function () {
 
 		Route::get('/guest_checkout', 'OrdersController@guest_checkout');
 		Route::get('/checkout', 'OrdersController@checkout')->middleware('Customer');
+		Route::any('/checkoutType', 'OrdersController@checkoutType')->middleware('Customer')->name('checkoutType');
 		Route::any('/checkout_pickup_address', 'OrdersController@checkout_pickup_address')->middleware('Customer');
 		Route::post('/checkout_shipping_address', 'OrdersController@checkout_shipping_address')->middleware('Customer');
 		Route::post('/checkout_billing_address', 'OrdersController@checkout_billing_address')->middleware('Customer');

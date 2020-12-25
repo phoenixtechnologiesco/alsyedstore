@@ -98,6 +98,12 @@ class OrdersController extends Controller
 
             if (empty(session('step'))) {
                 session(['step' => '0']);
+                // session(['step' => '1']);
+            }
+
+            if (empty(session('checkout_type'))) {
+                session(['checkout_type' => 'delivery']);
+                // session(['checkout_type' => 'pickup']);
             }
 
             if(auth()->guard('customer')->check()){
@@ -119,6 +125,29 @@ class OrdersController extends Controller
                 session(['shipping_address' => $address]);
             }
 
+            $pickup_address = array();
+            // $getpickup_address = array();
+            if(auth()->guard('customer')->check()){
+                
+                $getpickup_address = $this->shipping->getPickupAddress(array());
+                
+                if (!empty($getpickup_address) and count($getpickup_address)>0) {
+                    if($getpickup_address->default_address==1){                        
+                        // $default_address->delivery_phone = auth()->guard('customer')->user()->phone;
+                        $pickup_address = $getpickup_address;
+                    }                    
+                }
+            }
+
+            if (empty(session('pickup_address'))) {
+                session(['pickup_address' => $pickup_address]);
+            }
+
+            // session(['pickup_address' => $pickup_address]);
+            // session(['billing_address' => $pickup_address]);
+
+            // dd(session('pickup_address'));
+
             //shipping counties
             if (!empty(session('shipping_address')->countries_id)) {
                 $countries_id = session('shipping_address')->countries_id;
@@ -136,10 +165,6 @@ class OrdersController extends Controller
                 session(['tax_rate' => $tax]);
             } else {
                 session(['tax_rate' => '0']);
-            }
-
-            if (empty(session('pickup_address'))){
-                session(['pickup_address' => NULL]);
             }
 
             //shipping methods
@@ -174,6 +199,13 @@ class OrdersController extends Controller
                 session(['products_price' => $price]);
             }
 
+            // session(['step' => '0']);
+            // session(['checkout_type' => 'delivery']);
+                // OR
+            // session(['step' => '1']);
+            // session(['checkout_type' => 'pickup']);
+            // session(['pickup_address' => NULL]);
+
             // //breaintree token
             // $token = $this->generateBraintreeTokenWeb();
             // session(['braintree_token' => $token]);            
@@ -181,6 +213,18 @@ class OrdersController extends Controller
             return view("web.checkout", ['title' => $title, 'final_theme' => $final_theme])->with('result', $result);
         }
 
+    }
+
+    public function checkoutType(Request $request){
+        if($request->type == "delivery") {
+            session(['checkout_type' => 'delivery']);
+        }
+        else{
+            session(['checkout_type' => 'pickup']);
+        }
+
+        return session('checkout_type');
+        // dd($request->all());
     }
 
     //checkout
@@ -192,43 +236,48 @@ class OrdersController extends Controller
         $result = array();
         $result['commonContent'] = $this->index->commonContent();
 
-        if (session('step') == '2') {
-            session(['step' => '3']);
+        if (session('step') == '1') {
+            session(['step' => '2']);
         }
         $pickup_data = array();
+        $billing_data = array();
 
-        foreach ($request->all() as $key => $value) {
+        foreach ($request->all() as $key => $value){
 
-            //pickup address
-            if ($key == 'billing_company') {
-                $pickup_data['pickup_company'] = $value;
-            } else if ($key == 'billing_street') {
-                $pickup_data['pickup_street'] = $value;
-            } else if ($key == 'billing_countries_id') {
-                $pickup_data['pickup_countries_id'] = $value;
-            } else if ($key == 'billing_zone_id') {
-                $pickup_data['pickup_zone_id'] = $value;
-            } else if ($key == 'billing_city') {
-                $pickup_data['pickup_city'] = $value;
-            } else if ($key == 'billing_postcode') {
-                $pickup_data['pickup_zip'] = $value;
-            } else if ($key == 'billing_delivery_phone') {
-                $pickup_data['pickup_phone'] = $value;
+            $pickup_data[$key] = $value;
+
+            //billing address
+            if ($key == 'pickup_firstname') {
+                $billing_data['billing_firstname'] = $value;
+            } else if ($key == 'pickup_lastname') {
+                $billing_data['billing_lastname'] = $value;
+            } else if ($key == 'pickup_company') {
+                $billing_data['billing_company'] = $value;
+            } else if ($key == 'pickup_street') {
+                $billing_data['billing_street'] = $value;
+            } else if ($key == 'pickup_countries_id') {
+                $billing_data['billing_countries_id'] = $value;
+            } else if ($key == 'pickup_zone_id') {
+                $billing_data['billing_zone_id'] = $value;
+            } else if ($key == 'pickup_city') {
+                $billing_data['billing_city'] = $value;
+            } else if ($key == 'pickup_zip') {
+                $billing_data['billing_zip'] = $value;
+            } else if ($key == 'pickup_phone') {
+                $billing_data['billing_phone'] = $value;
             }
+
         }
 
-        if (empty($request->company)) {
-
-            $address = (object) $pickup_data;
-            session(['pickup_address' => $address]);
-        } else {
-
-            $address = session('pickup_address');
-            session(['pickup_address' => $address]);
+        if (empty(session('billing_address')) or session('billing_address')->same_billing_address == 1) {
+            $billing_address = (object)$billing_data;
+            // dd(session('billing_address'));
+            $billing_address->same_billing_address = 1;
+            session(['billing_address' => $billing_address]);
         }
 
-        // $address = (object) $pickup_data;
-        // session(['pickup_address' => $address]);
+        $address = (object) $pickup_data;
+        session(['pickup_address' => $address]);
 
         // return response()->json(["request_all" => $request->all(), "result" => $result]);
         return redirect()->back();
@@ -244,7 +293,7 @@ class OrdersController extends Controller
         $result['commonContent'] = $this->index->commonContent();
 
         if (session('step') == '0') {
-            session(['step' => '1']);
+            session(['step' => '2']);
         }
 
         foreach ($request->all() as $key => $value) {
@@ -287,8 +336,8 @@ class OrdersController extends Controller
     //checkout_billing_address
     public function checkout_billing_address(Request $request)
     {
-        if (session('step') == '1') {
-            session(['step' => '2']);
+        if (session('step') == '2') {
+            session(['step' => '3']);
         }
 
         if (empty($request->same_billing_address)) {
@@ -333,6 +382,7 @@ class OrdersController extends Controller
 
         }
         session(['shipping_detail' => (object) $shipping_detail]);
+
         return redirect()->back();
 
     }
@@ -343,36 +393,36 @@ class OrdersController extends Controller
         session(['payment_method' => $request->payment_method]);
     }
 
-    //generate token
-    public function generateBraintreeTokenWeb()
-    {
+    // //generate token
+    // public function generateBraintreeTokenWeb()
+    // {
 
-        $payments_setting = $this->order->payments_setting_for_brain_tree();
-        if ($payments_setting['merchant_id']->status == 1) {
-            //braintree transaction get nonce
-            $is_transaction = '0'; # For payment through braintree
+    //     $payments_setting = $this->order->payments_setting_for_brain_tree();
+    //     if ($payments_setting['merchant_id']->status == 1) {
+    //         //braintree transaction get nonce
+    //         $is_transaction = '0'; # For payment through braintree
 
-            if ($payments_setting['merchant_id']->environment == '0') {
-                $braintree_environment = 'sandbox';
-            } else {
-                $environment = 'production';
-            }
-            //for token please check braintree.php file
-            require_once app_path('braintree/index.php');          
+    //         if ($payments_setting['merchant_id']->environment == '0') {
+    //             $braintree_environment = 'sandbox';
+    //         } else {
+    //             $environment = 'production';
+    //         }
+    //         //for token please check braintree.php file
+    //         require_once app_path('braintree/index.php');          
 
-            $braintree_merchant_id = $payments_setting['merchant_id']->value;
-            $braintree_public_key = $payments_setting['public_key']->value;
-            $braintree_private_key = $payments_setting['private_key']->value;
+    //         $braintree_merchant_id = $payments_setting['merchant_id']->value;
+    //         $braintree_public_key = $payments_setting['public_key']->value;
+    //         $braintree_private_key = $payments_setting['private_key']->value;
 
 
-        } else {
-            $clientToken = '';
-        }
-        return $clientToken;
+    //     } else {
+    //         $clientToken = '';
+    //     }
+    //     return $clientToken;
 
         
 
-    }
+    // }
 
     //place_order
     public function place_order(Request $request)
@@ -675,48 +725,48 @@ class OrdersController extends Controller
     public function getPaymentMethods()
     {
 
-        /**   BRAIN TREE **/
-        //////////////////////
-        $result = array();
-        $payments_setting = $this->order->payments_setting_for_brain_tree();
-        if ($payments_setting['merchant_id']->environment == '0') {
-            $braintree_enviroment = 'Test';
-        } else {
-            $braintree_enviroment = 'Live';
-        }
+        // /**   BRAIN TREE **/
+        // //////////////////////
+        // $result = array();
+        // $payments_setting = $this->order->payments_setting_for_brain_tree();
+        // if ($payments_setting['merchant_id']->environment == '0') {
+        //     $braintree_enviroment = 'Test';
+        // } else {
+        //     $braintree_enviroment = 'Live';
+        // }
 
-        $braintree = array(
-            'environment' => $braintree_enviroment,
-            'name' => $payments_setting['merchant_id']->name,
-            'public_key' => $payments_setting['public_key']->value,
-            'active' => $payments_setting['merchant_id']->status,
-            'payment_method' => $payments_setting['merchant_id']->payment_method,
-            'payment_currency' => Session::get('currency_code'),
-        );
-        /**  END BRAIN TREE **/
-        //////////////////////
+        // $braintree = array(
+        //     'environment' => $braintree_enviroment,
+        //     'name' => $payments_setting['merchant_id']->name,
+        //     'public_key' => $payments_setting['public_key']->value,
+        //     'active' => $payments_setting['merchant_id']->status,
+        //     'payment_method' => $payments_setting['merchant_id']->payment_method,
+        //     'payment_currency' => Session::get('currency_code'),
+        // );
+        // /**  END BRAIN TREE **/
+        // //////////////////////
 
-        /**   STRIPE**/
-        //////////////////////
+        // /**   STRIPE**/
+        // //////////////////////
 
-        $payments_setting = $this->order->payments_setting_for_stripe();
-        if ($payments_setting['publishable_key']->environment == '0') {
-            $stripe_enviroment = 'Test';
-        } else {
-            $stripe_enviroment = 'Live';
-        }
+        // $payments_setting = $this->order->payments_setting_for_stripe();
+        // if ($payments_setting['publishable_key']->environment == '0') {
+        //     $stripe_enviroment = 'Test';
+        // } else {
+        //     $stripe_enviroment = 'Live';
+        // }
 
-        $stripe = array(
-            'environment' => $stripe_enviroment,
-            'name' => $payments_setting['publishable_key']->name,
-            'public_key' => $payments_setting['publishable_key']->value,
-            'active' => $payments_setting['publishable_key']->status,
-            'payment_currency' => Session::get('currency_code'),
-            'payment_method' => $payments_setting['publishable_key']->payment_method,
-        );
+        // $stripe = array(
+        //     'environment' => $stripe_enviroment,
+        //     'name' => $payments_setting['publishable_key']->name,
+        //     'public_key' => $payments_setting['publishable_key']->value,
+        //     'active' => $payments_setting['publishable_key']->status,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'payment_method' => $payments_setting['publishable_key']->payment_method,
+        // );
 
-        /**   END STRIPE**/
-        //////////////////////
+        // /**   END STRIPE**/
+        // //////////////////////
 
         /**   CASH ON DELIVERY**/
         //////////////////////
@@ -735,172 +785,172 @@ class OrdersController extends Controller
         /**   END CASH ON DELIVERY**/
         /*************************/
 
-        /**   PAYPAL**/
-        /*************************/
-        $payments_setting = $this->order->payments_setting_for_paypal();
+        // /**   PAYPAL**/
+        // /*************************/
+        // $payments_setting = $this->order->payments_setting_for_paypal();
 
-        if ($payments_setting['id']->environment == '0') {
-            $paypal_enviroment = 'Test';
-        } else {
-            $paypal_enviroment = 'Live';
-        }
+        // if ($payments_setting['id']->environment == '0') {
+        //     $paypal_enviroment = 'Test';
+        // } else {
+        //     $paypal_enviroment = 'Live';
+        // }
 
-        $paypal = array(
-            'environment' => $paypal_enviroment,
-            'name' => $payments_setting['id']->name,
-            'public_key' => $payments_setting['id']->value,
-            'active' => $payments_setting['id']->status,
-            'payment_method' => $payments_setting['id']->payment_method,
-            'payment_currency' => Session::get('currency_code'),
+        // $paypal = array(
+        //     'environment' => $paypal_enviroment,
+        //     'name' => $payments_setting['id']->name,
+        //     'public_key' => $payments_setting['id']->value,
+        //     'active' => $payments_setting['id']->status,
+        //     'payment_method' => $payments_setting['id']->payment_method,
+        //     'payment_currency' => Session::get('currency_code'),
 
-        );
+        // );
 
-        /**   END PAYPAL**/
-        /*************************/
+        // /**   END PAYPAL**/
+        // /*************************/
 
-        /**   INSTAMOJO**/
-        /*************************/
-        $payments_setting = $this->order->payments_setting_for_instamojo();
-        if ($payments_setting['auth_token']->environment == '0') {
-            $instamojo_enviroment = 'Test';
-        } else {
-            $instamojo_enviroment = 'Live';
-        }
+        // /**   INSTAMOJO**/
+        // /*************************/
+        // $payments_setting = $this->order->payments_setting_for_instamojo();
+        // if ($payments_setting['auth_token']->environment == '0') {
+        //     $instamojo_enviroment = 'Test';
+        // } else {
+        //     $instamojo_enviroment = 'Live';
+        // }
 
-        $instamojo = array(
-            'environment' => $instamojo_enviroment,
-            'name' => $payments_setting['auth_token']->name,
-            'public_key' => $payments_setting['api_key']->value,
-            'active' => $payments_setting['api_key']->status,
-            'payment_currency' => Session::get('currency_code'),
-            'payment_method' => $payments_setting['api_key']->payment_method,
-        );
+        // $instamojo = array(
+        //     'environment' => $instamojo_enviroment,
+        //     'name' => $payments_setting['auth_token']->name,
+        //     'public_key' => $payments_setting['api_key']->value,
+        //     'active' => $payments_setting['api_key']->status,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'payment_method' => $payments_setting['api_key']->payment_method,
+        // );
 
-        /**   END INSTAMOJO**/
-        /*************************/
+        // /**   END INSTAMOJO**/
+        // /*************************/
 
-        /**   END HYPERPAY**/
-        /*************************/
-        $payments_setting = $this->order->payments_setting_for_hyperpay();
-        //dd($payments_setting);
-        if ($payments_setting['userid']->environment == '0') {
-            $hyperpay_enviroment = 'Test';
-        } else {
-            $hyperpay_enviroment = 'Live';
-        }
+        // /**   END HYPERPAY**/
+        // /*************************/
+        // $payments_setting = $this->order->payments_setting_for_hyperpay();
+        // //dd($payments_setting);
+        // if ($payments_setting['userid']->environment == '0') {
+        //     $hyperpay_enviroment = 'Test';
+        // } else {
+        //     $hyperpay_enviroment = 'Live';
+        // }
 
-        $hyperpay = array(
-            'environment' => $hyperpay_enviroment,
-            'name' => $payments_setting['userid']->name,
-            'public_key' => $payments_setting['userid']->value,
-            'active' => $payments_setting['userid']->status,
-            'payment_currency' => Session::get('currency_code'),
-            'payment_method' => $payments_setting['userid']->payment_method,
-        );
-        /**   END HYPERPAY**/
-        /*************************/
+        // $hyperpay = array(
+        //     'environment' => $hyperpay_enviroment,
+        //     'name' => $payments_setting['userid']->name,
+        //     'public_key' => $payments_setting['userid']->value,
+        //     'active' => $payments_setting['userid']->status,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'payment_method' => $payments_setting['userid']->payment_method,
+        // );
+        // /**   END HYPERPAY**/
+        // /*************************/
 
-        $payments_setting = $this->order->payments_setting_for_razorpay();
+        // $payments_setting = $this->order->payments_setting_for_razorpay();
         
-        if ($payments_setting['RAZORPAY_SECRET']->environment == '0') {
-            $razorpay_enviroment = 'Test';
-        } else {
-            $razorpay_enviroment = 'Live';
-        }
+        // if ($payments_setting['RAZORPAY_SECRET']->environment == '0') {
+        //     $razorpay_enviroment = 'Test';
+        // } else {
+        //     $razorpay_enviroment = 'Live';
+        // }
 
-        $razorpay = array(
-            'environment' => $razorpay_enviroment,
-            'public_key' => $payments_setting['RAZORPAY_KEY']->value,
-            'name' => $payments_setting['RAZORPAY_KEY']->name,
-            'RAZORPAY_KEY' => $payments_setting['RAZORPAY_KEY']->value,
-            'RAZORPAY_SECRET' => $payments_setting['RAZORPAY_SECRET']->value,
-            'active' => $payments_setting['RAZORPAY_SECRET']->status,
-            'payment_currency' => Session::get('currency_code'),
-            'payment_method' => $payments_setting['RAZORPAY_SECRET']->payment_method,
-        );
+        // $razorpay = array(
+        //     'environment' => $razorpay_enviroment,
+        //     'public_key' => $payments_setting['RAZORPAY_KEY']->value,
+        //     'name' => $payments_setting['RAZORPAY_KEY']->name,
+        //     'RAZORPAY_KEY' => $payments_setting['RAZORPAY_KEY']->value,
+        //     'RAZORPAY_SECRET' => $payments_setting['RAZORPAY_SECRET']->value,
+        //     'active' => $payments_setting['RAZORPAY_SECRET']->status,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'payment_method' => $payments_setting['RAZORPAY_SECRET']->payment_method,
+        // );
 
-        $payments_setting = $this->order->payments_setting_for_paytm();
-        
-
-        if ($payments_setting['paytm_mid']->environment == '0') {
-            $paytm_enviroment = 'Test';
-        } else {
-            $paytm_enviroment = 'Live';
-        }
-
-        $paytm = array(
-            'environment' => $paytm_enviroment,
-            'payment_currency' => Session::get('currency_code'),
-            'public_key' => '',
-            'name' => $payments_setting['paytm_mid']->name,
-            'active' => $payments_setting['paytm_mid']->status,
-            'payment_method' => $payments_setting['paytm_mid']->payment_method,
-        );
-
-        $payments_setting = $this->order->payments_setting_for_directbank();     
-
-        if ($payments_setting['account_name']->environment == '0') {
-            $enviroment = 'Live';
-        } else {
-            $enviroment = 'Live';
-        }
-
-        $banktransfer = array(
-            'environment' => $enviroment,
-            'payment_currency' => Session::get('currency_code'),
-            'public_key' => '',
-            'name' => $payments_setting['account_name']->name,
-            'descriptions' => $payments_setting['account_name']->sub_name_1,
-            'active' => $payments_setting['account_name']->status,
-            'payment_method' => $payments_setting['account_name']->payment_method,
-        );
-
-        $payments_setting = $this->order->payments_setting_for_paystack();   
-        if ($payments_setting['secret_key']->environment == '0') {
-            $enviroment = 'Test';
-        } else {
-            $enviroment = 'Live';
-        }
-
-        $paystack = array(
-            'environment' => $enviroment,
-            'payment_currency' => Session::get('currency_code'),
-            'public_key' => $payments_setting['secret_key']->value,
-            'name' => $payments_setting['secret_key']->name,
-            'active' => $payments_setting['secret_key']->status,
-            'payment_method' => $payments_setting['secret_key']->payment_method,
-        );
-
-        $payments_setting = $this->order->payments_setting_for_midtrans();  
-
-        if ($payments_setting['merchant_id']->environment == '0') {
-            $enviroment = 'Test';
-        } else {
-            $enviroment = 'Live';
-        }
-
-        $midtrans = array(
-            'environment' => $enviroment,
-            'payment_currency' => Session::get('currency_code'),
-            'public_key' => $payments_setting['server_key']->value,
-            'name' => $payments_setting['merchant_id']->name,
-            'active' => $payments_setting['merchant_id']->status,
-            'payment_method' => $payments_setting['merchant_id']->payment_method,
-        );        
-
+        // $payments_setting = $this->order->payments_setting_for_paytm();
         
 
-        $result[0] = $braintree;
-        $result[1] = $stripe;
-        $result[2] = $cod;
-        $result[3] = $paypal;
-        $result[4] = $instamojo;
-        $result[5] = $hyperpay;
-        $result[6] = $razorpay;
-        $result[7] = $paytm;
-        $result[8] = $banktransfer;
-        $result[9] = $paystack;
-        $result[10] = $midtrans;
+        // if ($payments_setting['paytm_mid']->environment == '0') {
+        //     $paytm_enviroment = 'Test';
+        // } else {
+        //     $paytm_enviroment = 'Live';
+        // }
+
+        // $paytm = array(
+        //     'environment' => $paytm_enviroment,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'public_key' => '',
+        //     'name' => $payments_setting['paytm_mid']->name,
+        //     'active' => $payments_setting['paytm_mid']->status,
+        //     'payment_method' => $payments_setting['paytm_mid']->payment_method,
+        // );
+
+        // $payments_setting = $this->order->payments_setting_for_directbank();     
+
+        // if ($payments_setting['account_name']->environment == '0') {
+        //     $enviroment = 'Live';
+        // } else {
+        //     $enviroment = 'Live';
+        // }
+
+        // $banktransfer = array(
+        //     'environment' => $enviroment,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'public_key' => '',
+        //     'name' => $payments_setting['account_name']->name,
+        //     'descriptions' => $payments_setting['account_name']->sub_name_1,
+        //     'active' => $payments_setting['account_name']->status,
+        //     'payment_method' => $payments_setting['account_name']->payment_method,
+        // );
+
+        // $payments_setting = $this->order->payments_setting_for_paystack();   
+        // if ($payments_setting['secret_key']->environment == '0') {
+        //     $enviroment = 'Test';
+        // } else {
+        //     $enviroment = 'Live';
+        // }
+
+        // $paystack = array(
+        //     'environment' => $enviroment,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'public_key' => $payments_setting['secret_key']->value,
+        //     'name' => $payments_setting['secret_key']->name,
+        //     'active' => $payments_setting['secret_key']->status,
+        //     'payment_method' => $payments_setting['secret_key']->payment_method,
+        // );
+
+        // $payments_setting = $this->order->payments_setting_for_midtrans();  
+
+        // if ($payments_setting['merchant_id']->environment == '0') {
+        //     $enviroment = 'Test';
+        // } else {
+        //     $enviroment = 'Live';
+        // }
+
+        // $midtrans = array(
+        //     'environment' => $enviroment,
+        //     'payment_currency' => Session::get('currency_code'),
+        //     'public_key' => $payments_setting['server_key']->value,
+        //     'name' => $payments_setting['merchant_id']->name,
+        //     'active' => $payments_setting['merchant_id']->status,
+        //     'payment_method' => $payments_setting['merchant_id']->payment_method,
+        // );        
+
+        
+
+        // $result[0] = $braintree;
+        // $result[1] = $stripe;
+        $result[0] = $cod;
+        // $result[3] = $paypal;
+        // $result[4] = $instamojo;
+        // $result[5] = $hyperpay;
+        // $result[6] = $razorpay;
+        // $result[7] = $paytm;
+        // $result[8] = $banktransfer;
+        // $result[9] = $paystack;
+        // $result[10] = $midtrans;
         return $result;
     }
 

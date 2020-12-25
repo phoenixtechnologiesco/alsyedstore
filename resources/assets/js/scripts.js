@@ -3211,9 +3211,9 @@ jQuery('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
    
     var hashValue = jQuery(e.target).attr('href');
     
-    jQuery("#pills-shipping-tab").removeClass("active");
-    jQuery("#pills-billing-tab").removeClass("active");
+	jQuery("#pills-shipping-tab").removeClass("active");
 	jQuery("#pills-pickup-tab").removeClass("active");
+    jQuery("#pills-billing-tab").removeClass("active");
     jQuery("#pills-method-tab").removeClass("active");
     jQuery("#pills-order-tab").removeClass("active");
     jQuery(hashValue+"-tab").addClass("active");

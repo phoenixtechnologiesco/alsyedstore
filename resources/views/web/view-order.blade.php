@@ -326,7 +326,7 @@
 
           </tbody>
         </table>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-xs-12 col-sm-12">
                 @if(count($result['orders'][0]->statusess)>0)
                     <div style="border-radius:5px;"class="card">
@@ -349,7 +349,7 @@
                     </div>
                 @endif
             </div>
-        </div>
+        </div> --}}
 
 
       <!-- ............the end..... -->

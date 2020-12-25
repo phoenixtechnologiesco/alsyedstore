@@ -70,27 +70,53 @@ class Order extends Model
             $customers_id = auth()->guard('customer')->user()->id;
             $email = auth()->guard('customer')->user()->email;
         }
-        $delivery_company = session('shipping_address')->company;
-        $delivery_firstname = session('shipping_address')->firstname;
 
-        $delivery_lastname = session('shipping_address')->lastname;
-        $delivery_street_address = session('shipping_address')->street;
-        $delivery_suburb = '';
-        $delivery_city = session('shipping_address')->city;
-        $delivery_postcode = session('shipping_address')->postcode;
-        $delivery_phone = session('shipping_address')->delivery_phone;
-
-        $delivery = DB::table('zones')->where('zone_id', '=', session('shipping_address')->zone_id)->get();
-
-        if (count($delivery) > 0) {
-            $delivery_state = $delivery[0]->zone_code;
-        } else {
-            $delivery_state = 'other';
+        if(!empty(session('shipping_address')) /*and count(session('shipping_address')) > 0*/){
+            $delivery_company = session('shipping_address')->company;
+            $delivery_firstname = session('shipping_address')->firstname;
+    
+            $delivery_lastname = session('shipping_address')->lastname;
+            $delivery_street_address = session('shipping_address')->street;
+            $delivery_suburb = '';
+            $delivery_city = session('shipping_address')->city;
+            $delivery_postcode = session('shipping_address')->postcode;
+            $delivery_phone = session('shipping_address')->delivery_phone;
+    
+            $delivery = DB::table('zones')->where('zone_id', '=', session('shipping_address')->zone_id)->get();
+    
+            if (count($delivery) > 0) {
+                $delivery_state = $delivery[0]->zone_code;
+            } else {
+                $delivery_state = 'other';
+            }
+    
+            $country = DB::table('countries')->where('countries_id', '=', session('shipping_address')->countries_id)->get();
+    
+            $delivery_country = $country[0]->countries_name;
         }
-
-        $country = DB::table('countries')->where('countries_id', '=', session('shipping_address')->countries_id)->get();
-
-        $delivery_country = $country[0]->countries_name;
+        else{
+            $pickup_company = session('pickup_address')->pickup_company;
+            $pickup_firstname = session('pickup_address')->pickup_firstname;
+    
+            $pickup_lastname = session('pickup_address')->pickup_lastname;
+            $pickup_street_address = session('pickup_address')->pickup_street;
+            $pickup_suburb = '';
+            $pickup_city = session('pickup_address')->pickup_city;
+            $pickup_postcode = session('pickup_address')->pickup_zip;
+            $pickup_phone = session('pickup_address')->pickup_phone;
+    
+            $pickup = DB::table('zones')->where('zone_id', '=', session('pickup_address')->pickup_zone_id)->get();
+    
+            if (count($pickup) > 0) {
+                $pickup_state = $pickup[0]->zone_code;
+            } else {
+                $pickup_state = 'other';
+            }
+    
+            $country = DB::table('countries')->where('countries_id', '=', session('pickup_address')->pickup_countries_id)->get();
+    
+            $pickup_country = $country[0]->countries_name;
+        }
 
         $billing_firstname = session('billing_address')->billing_firstname;
         $billing_lastname = session('billing_address')->billing_lastname;
@@ -187,223 +213,282 @@ class Order extends Model
 
         //payment methods
 
-        if ($payment_method == 'braintree') {
-            $payment_method_name = 'Braintree';
-            $payments_setting = $this->payments_setting_for_brain_tree();
+        // if ($payment_method == 'braintree') {
+        //     $payment_method_name = 'Braintree';
+        //     $payments_setting = $this->payments_setting_for_brain_tree();
 
-            //braintree transaction with nonce
-            $is_transaction = '1'; # For payment through braintree
-            $nonce = $request->payment_method_nonce;
+        //     //braintree transaction with nonce
+        //     $is_transaction = '1'; # For payment through braintree
+        //     $nonce = $request->payment_method_nonce;
 
-            if ($payments_setting['merchant_id']->environment == '0') {
-                $braintree_environment = 'sandbox';
-            } else {
-                $braintree_environment = 'production';
-            }
+        //     if ($payments_setting['merchant_id']->environment == '0') {
+        //         $braintree_environment = 'sandbox';
+        //     } else {
+        //         $braintree_environment = 'production';
+        //     }
 
-            $braintree_merchant_id = $payments_setting['merchant_id']->value;
-            $braintree_public_key = $payments_setting['public_key']->value;
-            $braintree_private_key = $payments_setting['private_key']->value;
+        //     $braintree_merchant_id = $payments_setting['merchant_id']->value;
+        //     $braintree_public_key = $payments_setting['public_key']->value;
+        //     $braintree_private_key = $payments_setting['private_key']->value;
 
-            //brain tree credential
-            require_once app_path('braintree/index.php');    
+        //     //brain tree credential
+        //     require_once app_path('braintree/index.php');    
 
-            if ($result->success) {
+        //     if ($result->success) {
 
-                if ($result->transaction->id) {
-                    $order_information = array(
-                        'braintree_id' => $result->transaction->id,
-                        'status' => $result->transaction->status,
-                        'type' => $result->transaction->type,
-                        'currencyIsoCode' => $result->transaction->currencyIsoCode,
-                        'amount' => $result->transaction->amount,
-                        'merchantAccountId' => $result->transaction->merchantAccountId,
-                        'subMerchantAccountId' => $result->transaction->subMerchantAccountId,
-                        'masterMerchantAccountId' => $result->transaction->masterMerchantAccountId,
-                        //'orderId'=>$result->transaction->orderId,
-                        'createdAt' => time(),
-                        //                        'updatedAt'=>$result->transaction->updatedAt->date,
-                        'token' => $result->transaction->creditCard['token'],
-                        'bin' => $result->transaction->creditCard['bin'],
-                        'last4' => $result->transaction->creditCard['last4'],
-                        'cardType' => $result->transaction->creditCard['cardType'],
-                        'expirationMonth' => $result->transaction->creditCard['expirationMonth'],
-                        'expirationYear' => $result->transaction->creditCard['expirationYear'],
-                        'customerLocation' => $result->transaction->creditCard['customerLocation'],
-                        'cardholderName' => $result->transaction->creditCard['cardholderName'],
-                    );
+        //         if ($result->transaction->id) {
+        //             $order_information = array(
+        //                 'braintree_id' => $result->transaction->id,
+        //                 'status' => $result->transaction->status,
+        //                 'type' => $result->transaction->type,
+        //                 'currencyIsoCode' => $result->transaction->currencyIsoCode,
+        //                 'amount' => $result->transaction->amount,
+        //                 'merchantAccountId' => $result->transaction->merchantAccountId,
+        //                 'subMerchantAccountId' => $result->transaction->subMerchantAccountId,
+        //                 'masterMerchantAccountId' => $result->transaction->masterMerchantAccountId,
+        //                 //'orderId'=>$result->transaction->orderId,
+        //                 'createdAt' => time(),
+        //                 //                        'updatedAt'=>$result->transaction->updatedAt->date,
+        //                 'token' => $result->transaction->creditCard['token'],
+        //                 'bin' => $result->transaction->creditCard['bin'],
+        //                 'last4' => $result->transaction->creditCard['last4'],
+        //                 'cardType' => $result->transaction->creditCard['cardType'],
+        //                 'expirationMonth' => $result->transaction->creditCard['expirationMonth'],
+        //                 'expirationYear' => $result->transaction->creditCard['expirationYear'],
+        //                 'customerLocation' => $result->transaction->creditCard['customerLocation'],
+        //                 'cardholderName' => $result->transaction->creditCard['cardholderName'],
+        //             );
 
-                    $payment_status = "success";
-                }
-            } else {
-                $payment_status = "failed";
-            }
+        //             $payment_status = "success";
+        //         }
+        //     } else {
+        //         $payment_status = "failed";
+        //     }
 
-        } else if ($payment_method == 'stripe') { #### stipe payment
-            $payment_method_name = 'stripe';
-            $payments_setting = $this->payments_setting_for_stripe();
-            //require file
-            require_once app_path('stripe/config.php');
+        // } else if ($payment_method == 'stripe') { #### stipe payment
+        //     $payment_method_name = 'stripe';
+        //     $payments_setting = $this->payments_setting_for_stripe();
+        //     //require file
+        //     require_once app_path('stripe/config.php');
 
-            //get token from app
-            $token = $request->token;
+        //     //get token from app
+        //     $token = $request->token;
 
-            $customer = \Stripe\Customer::create(array(
-                'email' => $email,
-                'source' => $token,
-            ));
+        //     $customer = \Stripe\Customer::create(array(
+        //         'email' => $email,
+        //         'source' => $token,
+        //     ));
 
-            $charge = \Stripe\Charge::create(array(
-                'customer' => $customer->id,
-                'amount' => 100 * $order_price,
-                'currency' => 'usd',
-            ));
+        //     $charge = \Stripe\Charge::create(array(
+        //         'customer' => $customer->id,
+        //         'amount' => 100 * $order_price,
+        //         'currency' => 'usd',
+        //     ));
 
-            if ($charge->paid == true) {
-                $order_information = array(
-                    'paid' => 'true',
-                    'transaction_id' => $charge->id,
-                    'type' => $charge->outcome->type,
-                    'balance_transaction' => $charge->balance_transaction,
-                    'status' => $charge->status,
-                    'currency' => $charge->currency,
-                    'amount' => $charge->amount,
-                    'created' => date('d M,Y', $charge->created),
-                    'dispute' => $charge->dispute,
-                    'customer' => $charge->customer,
-                    'address_zip' => $charge->source->address_zip,
-                    'seller_message' => $charge->outcome->seller_message,
-                    'network_status' => $charge->outcome->network_status,
-                    'expirationMonth' => $charge->outcome->type,
-                );
+        //     if ($charge->paid == true) {
+        //         $order_information = array(
+        //             'paid' => 'true',
+        //             'transaction_id' => $charge->id,
+        //             'type' => $charge->outcome->type,
+        //             'balance_transaction' => $charge->balance_transaction,
+        //             'status' => $charge->status,
+        //             'currency' => $charge->currency,
+        //             'amount' => $charge->amount,
+        //             'created' => date('d M,Y', $charge->created),
+        //             'dispute' => $charge->dispute,
+        //             'customer' => $charge->customer,
+        //             'address_zip' => $charge->source->address_zip,
+        //             'seller_message' => $charge->outcome->seller_message,
+        //             'network_status' => $charge->outcome->network_status,
+        //             'expirationMonth' => $charge->outcome->type,
+        //         );
 
-                $payment_status = "success";
+        //         $payment_status = "success";
 
-            } else {
-                $payment_status = "failed";
-            }
+        //     } else {
+        //         $payment_status = "failed";
+        //     }
 
-        } else if ($payment_method == 'cash_on_delivery') {
+        // } else 
+        if ($payment_method == 'cash_on_delivery') {
             $payments_setting = $this->payments_setting_for_cod();
 
             $payment_method_name = $payments_setting->name;
             $payment_status = 'success';
 
-        } else if ($payment_method == 'paypal') {
-            $paypal_description = $this->payments_setting_for_paypal();
-            $payment_method_name = $payments_setting['id']->name;
-            $payment_status = 'success';
-            $order_information = json_decode($request->nonce, JSON_UNESCAPED_SLASHES);
-        } else if ($payment_method == 'instamojo') {
-            $instamojo = $this->payments_setting_for_instamojo();
-            $payment_method_name = $instamojo['auth_token']->name;
-            $payment_status = 'success';
-            $order_information = $request->nonce;
-        } else if ($payment_method == 'hyperpay') {
-            $hyperpay = $this->payments_setting_for_hyperpay();
-            $payment_method_name = $hyperpay['userid']->name;
-            $payment_status = 'success';
-            $order_information = session('paymentResponseData');
-        } else if ($payment_method == 'razor_pay') {
-            $method = $this->payments_setting_for_razorpay();
-            $payment_method_name = $method['RAZORPAY_KEY']->name;
-            $payment_status = 'success';
-            $order_information = session('paymentResponseData');
-        } else if ($payment_method == 'pay_tm') {
-            $method = $this->payments_setting_for_paytm();
-            $payment_method_name = $method['paytm_mid']->name;
-            Session(['paytm' => 'sasa']);
-            $payment_status = 'success';
-            $order_information = session('paymentResponseData');
-        }else if ($payment_method == 'banktransfer') {
+         } 
+        //   else if ($payment_method == 'paypal') {
+        //     $paypal_description = $this->payments_setting_for_paypal();
+        //     $payment_method_name = $payments_setting['id']->name;
+        //     $payment_status = 'success';
+        //     $order_information = json_decode($request->nonce, JSON_UNESCAPED_SLASHES);
+        // } else if ($payment_method == 'instamojo') {
+        //     $instamojo = $this->payments_setting_for_instamojo();
+        //     $payment_method_name = $instamojo['auth_token']->name;
+        //     $payment_status = 'success';
+        //     $order_information = $request->nonce;
+        // } else if ($payment_method == 'hyperpay') {
+        //     $hyperpay = $this->payments_setting_for_hyperpay();
+        //     $payment_method_name = $hyperpay['userid']->name;
+        //     $payment_status = 'success';
+        //     $order_information = session('paymentResponseData');
+        // } else if ($payment_method == 'razor_pay') {
+        //     $method = $this->payments_setting_for_razorpay();
+        //     $payment_method_name = $method['RAZORPAY_KEY']->name;
+        //     $payment_status = 'success';
+        //     $order_information = session('paymentResponseData');
+        // } else if ($payment_method == 'pay_tm') {
+        //     $method = $this->payments_setting_for_paytm();
+        //     $payment_method_name = $method['paytm_mid']->name;
+        //     Session(['paytm' => 'sasa']);
+        //     $payment_status = 'success';
+        //     $order_information = session('paymentResponseData');
+        // }else if ($payment_method == 'banktransfer') {
 
-            $method = $this->payments_setting_for_directbank();
-            $payment_method_name = $payment_method;
-            $payment_status = 'success';
-            $order_information = array(
-                'account_name' => $method['account_name']->value,
-                'account_number' => $method['account_number']->value,
-                'payment_method' => $method['account_name']->payment_method,
-                'bank_name' => $method['bank_name']->value,
-                'short_code' => $method['short_code']->value,
-                'iban' => $method['iban']->value,
-                'swift' => $method['swift']->value,
-            );
-        }  else if ($payment_method == 'paystack') {
+        //     $method = $this->payments_setting_for_directbank();
+        //     $payment_method_name = $payment_method;
+        //     $payment_status = 'success';
+        //     $order_information = array(
+        //         'account_name' => $method['account_name']->value,
+        //         'account_number' => $method['account_number']->value,
+        //         'payment_method' => $method['account_name']->payment_method,
+        //         'bank_name' => $method['bank_name']->value,
+        //         'short_code' => $method['short_code']->value,
+        //         'iban' => $method['iban']->value,
+        //         'swift' => $method['swift']->value,
+        //     );
+        // }  else if ($payment_method == 'paystack') {
 
-            $method = $this->payments_setting_for_paystack();
-            $payment_method_name = $payment_method;
-            $payment_status = 'success';
-            $order_information = session('payment_json');
-        }   else if ($payment_method == 'midtrans') {
+        //     $method = $this->payments_setting_for_paystack();
+        //     $payment_method_name = $payment_method;
+        //     $payment_status = 'success';
+        //     $order_information = session('payment_json');
+        // }   else if ($payment_method == 'midtrans') {
 
-            $method = $this->payments_setting_for_midtrans();
-            $payment_method_name = $payment_method;
-            $payment_status = 'success';
-            $order_information = json_decode($request->nonce, JSON_UNESCAPED_SLASHES);
-        }      
+        //     $method = $this->payments_setting_for_midtrans();
+        //     $payment_method_name = $payment_method;
+        //     $payment_status = 'success';
+        //     $order_information = json_decode($request->nonce, JSON_UNESCAPED_SLASHES);
+        // }      
 
-        if ($payment_method == 'banktransfer') {
-            session(['banktransfer' => 'yes']);
-        }else{
-            session(['banktransfer' => 'no']);
-        }
+        // if ($payment_method == 'banktransfer') {
+        //     session(['banktransfer' => 'yes']);
+        // }else{
+        //     session(['banktransfer' => 'no']);
+        // }
 
         //check if order is verified
         if ($payment_status == 'success') {            
 
-            $orders_id = DB::table('orders')->insertGetId(
-                ['customers_id' => $customers_id,
-                    'customers_name' => $delivery_firstname . ' ' . $delivery_lastname,
-                    'customers_street_address' => $delivery_street_address,
-                    'customers_suburb' => $delivery_suburb,
-                    'customers_city' => $delivery_city,
-                    'customers_postcode' => $delivery_postcode,
-                    'customers_state' => $delivery_state,
-                    'customers_country' => $delivery_country,
-                    //'customers_telephone' => $customers_telephone,
-                    'email' => $email,
-                    // 'customers_address_format_id' => $delivery_address_format_id,
+            if(!empty(session('shipping_address')) /*and count(session('shipping_address')) > 0*/){
+                $orders_id = DB::table('orders')->insertGetId(
+                    ['customers_id' => $customers_id,
+                        'customers_name' => $delivery_firstname . ' ' . $delivery_lastname,
+                        'customers_street_address' => $delivery_street_address,
+                        'customers_suburb' => $delivery_suburb,
+                        'customers_city' => $delivery_city,
+                        'customers_postcode' => $delivery_postcode,
+                        'customers_state' => $delivery_state,
+                        'customers_country' => $delivery_country,
+                        //'customers_telephone' => $customers_telephone,
+                        'email' => $email,
+                        // 'customers_address_format_id' => $delivery_address_format_id,
 
-                    'delivery_name' => $delivery_firstname . ' ' . $delivery_lastname,
-                    'delivery_street_address' => $delivery_street_address,
-                    'delivery_suburb' => $delivery_suburb,
-                    'delivery_city' => $delivery_city,
-                    'delivery_postcode' => $delivery_postcode,
-                    'delivery_state' => $delivery_state,
-                    'delivery_country' => $delivery_country,
-                    // 'delivery_address_format_id' => $delivery_address_format_id,
+                        'delivery_name' => $delivery_firstname . ' ' . $delivery_lastname,
+                        'delivery_street_address' => $delivery_street_address,
+                        'delivery_suburb' => $delivery_suburb,
+                        'delivery_city' => $delivery_city,
+                        'delivery_postcode' => $delivery_postcode,
+                        'delivery_state' => $delivery_state,
+                        'delivery_country' => $delivery_country,
+                        // 'delivery_address_format_id' => $delivery_address_format_id,
 
-                    'billing_name' => $billing_firstname . ' ' . $billing_lastname,
-                    'billing_street_address' => $billing_street_address,
-                    'billing_suburb' => $billing_suburb,
-                    'billing_city' => $billing_city,
-                    'billing_postcode' => $billing_postcode,
-                    'billing_state' => $billing_state,
-                    'billing_country' => $billing_country,
-                    //'billing_address_format_id' => $billing_address_format_id,
+                        'billing_name' => $billing_firstname . ' ' . $billing_lastname,
+                        'billing_street_address' => $billing_street_address,
+                        'billing_suburb' => $billing_suburb,
+                        'billing_city' => $billing_city,
+                        'billing_postcode' => $billing_postcode,
+                        'billing_state' => $billing_state,
+                        'billing_country' => $billing_country,
+                        //'billing_address_format_id' => $billing_address_format_id,
 
-                    'payment_method' => $payment_method_name,
-                    'cc_type' => $cc_type,
-                    'cc_owner' => $cc_owner,
-                    'cc_number' => $cc_number,
-                    'cc_expires' => $cc_expires,
-                    'last_modified' => $last_modified,
-                    'date_purchased' => $date_purchased,
-                    'order_price' => $order_price,
-                    'shipping_cost' => $shipping_cost,
-                    'shipping_method' => $shipping_method,
-                    // 'orders_status' => $orders_status,
-                    //'orders_date_finished'  => $orders_date_finished,
-                    'currency' => $currency,
-                    'order_information' => json_encode($order_information),
-                    'coupon_code' => $code,
-                    'coupon_amount' => $coupon_amount,
-                    'total_tax' => $total_tax,
-                    'ordered_source' => '1',
-                    'delivery_phone' => $delivery_phone,
-                    'billing_phone' => $billing_phone,
-                ]);
+                        'payment_method' => $payment_method_name,
+                        'cc_type' => $cc_type,
+                        'cc_owner' => $cc_owner,
+                        'cc_number' => $cc_number,
+                        'cc_expires' => $cc_expires,
+                        'last_modified' => $last_modified,
+                        'date_purchased' => $date_purchased,
+                        'order_price' => $order_price,
+                        'shipping_cost' => $shipping_cost,
+                        'shipping_method' => $shipping_method,
+                        // 'orders_status' => $orders_status,
+                        //'orders_date_finished'  => $orders_date_finished,
+                        'currency' => $currency,
+                        'order_information' => json_encode($order_information),
+                        'coupon_code' => $code,
+                        'coupon_amount' => $coupon_amount,
+                        'total_tax' => $total_tax,
+                        'ordered_source' => '1',
+                        'delivery_phone' => $delivery_phone,
+                        'billing_phone' => $billing_phone,
+                    ]);
+            }
+            else{
+                $orders_id = DB::table('orders')->insertGetId(
+                    ['customers_id' => $customers_id,
+                        'customers_name' => $pickup_firstname . ' ' . $pickup_lastname,
+                        'customers_street_address' => $pickup_street_address,
+                        'customers_suburb' => $pickup_suburb,
+                        'customers_city' => $pickup_city,
+                        'customers_postcode' => $pickup_postcode,
+                        'customers_state' => $pickup_state,
+                        'customers_country' => $pickup_country,
+                        //'customers_telephone' => $customers_telephone,
+                        'email' => $email,
+                        // 'customers_address_format_id' => $pickup_address_format_id,
+    
+                        'delivery_name' => $pickup_firstname . ' ' . $pickup_lastname,
+                        'delivery_street_address' => $pickup_street_address,
+                        'delivery_suburb' => $pickup_suburb,
+                        'delivery_city' => $pickup_city,
+                        'delivery_postcode' => $pickup_postcode,
+                        'delivery_state' => $pickup_state,
+                        'delivery_country' => $pickup_country,
+                        // 'delivery_address_format_id' => $delivery_address_format_id,
+    
+                        'billing_name' => $billing_firstname . ' ' . $billing_lastname,
+                        'billing_street_address' => $billing_street_address,
+                        'billing_suburb' => $billing_suburb,
+                        'billing_city' => $billing_city,
+                        'billing_postcode' => $billing_postcode,
+                        'billing_state' => $billing_state,
+                        'billing_country' => $billing_country,
+                        //'billing_address_format_id' => $billing_address_format_id,
+    
+                        'payment_method' => $payment_method_name,
+                        'cc_type' => $cc_type,
+                        'cc_owner' => $cc_owner,
+                        'cc_number' => $cc_number,
+                        'cc_expires' => $cc_expires,
+                        'last_modified' => $last_modified,
+                        'date_purchased' => $date_purchased,
+                        'order_price' => $order_price,
+                        'shipping_cost' => $shipping_cost,
+                        'shipping_method' => $shipping_method,
+                        // 'orders_status' => $orders_status,
+                        //'orders_date_finished'  => $orders_date_finished,
+                        'currency' => $currency,
+                        'order_information' => json_encode($order_information),
+                        'coupon_code' => $code,
+                        'coupon_amount' => $coupon_amount,
+                        'total_tax' => $total_tax,
+                        'ordered_source' => '1',
+                        'delivery_phone' => $pickup_phone,
+                        'billing_phone' => $billing_phone,
+                    ]);
+    
+            }
 
             //orders status history
             $orders_history_id = DB::table('orders_status_history')->insertGetId(
