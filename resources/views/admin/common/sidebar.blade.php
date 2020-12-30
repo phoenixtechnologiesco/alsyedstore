@@ -11,7 +11,7 @@
           </a>
         </li>
       <?php
-        if( $result['commonContent']['roles'] != null and $result['commonContent']['roles']->view_media == 1){
+        if($result['commonContent']['roles'] != null and $result['commonContent']['roles']->view_media == 1){
       ?>
       <li class="treeview {{ Request::is('admin/media/add') ? 'active' : '' }}">
         <a href="#">
@@ -83,7 +83,7 @@
             @endif
 
             @if ($result['commonContent']['roles']!= null and $result['commonContent']['roles']->products_view == 1)
-              <li class="{{ Request::is('admin/products/attributes/display') ? 'active' : '' }}  {{ Request::is('admin/products/attributes/add') ? 'active' : '' }}  {{ Request::is('admin/products/attributes/*') ? 'active' : '' }}" ><a href="{{ URL::to('admin/products/attributes/display' )}}"><i class="fa fa-circle-o"></i> {{ trans('labels.products_attributes') }}</a></li>
+              {{-- <li class="{{ Request::is('admin/products/attributes/display') ? 'active' : '' }}  {{ Request::is('admin/products/attributes/add') ? 'active' : '' }}  {{ Request::is('admin/products/attributes/*') ? 'active' : '' }}" ><a href="{{ URL::to('admin/products/attributes/display' )}}"><i class="fa fa-circle-o"></i> {{ trans('labels.products_attributes') }}</a></li> --}}
               <li class="{{ Request::is('admin/units') ? 'active' : '' }} {{ Request::is('admin/addunit') ? 'active' : '' }} {{ Request::is('admin/editunit/*') ? 'active' : '' }} "><a href="{{ URL::to('admin/units')}}"><i class="fa fa-circle-o"></i> {{ trans('labels.link_units') }}</a></li>
               <li class="{{ Request::is('admin/products/display') ? 'active' : '' }} {{ Request::is('admin/products/add') ? 'active' : '' }} {{ Request::is('admin/products/edit/*') ? 'active' : '' }} {{ Request::is('admin/products/attributes/add/*') ? 'active' : '' }} {{ Request::is('admin/addinventory/*') ? 'active' : '' }} {{ Request::is('admin/addproductimages/*') ? 'active' : '' }}"><a href="{{ URL::to('admin/products/display')}}"><i class="fa fa-circle-o"></i> {{ trans('labels.link_all_products') }}</a></li>
               <li class="{{ Request::is('admin/products/inventory/display') ? 'active' : '' }}"><a href="{{ URL::to('admin/products/inventory/display')}}"><i class="fa fa-circle-o"></i> {{ trans('labels.inventory') }}</a></li>
@@ -214,12 +214,12 @@
         @endif --}}
         <?php
         if($result['commonContent']['roles']!= null and $result['commonContent']['roles']->general_setting_view == 1){
-      ?>
+        ?>
 
         <li class="treeview {{ Request::is('admin/facebooksettings') ? 'active' : '' }} {{ Request::is('admin/setting') ? 'active' : '' }} {{ Request::is('admin/googlesettings') ? 'active' : '' }}  {{ Request::is('admin/alertsetting') ? 'active' : '' }}  ">
           <a href="#">
             <i class="fa fa-gears" aria-hidden="true"></i>
-  <span> {{ trans('labels.link_general_settings') }}</span> <i class="fa fa-angle-left pull-right"></i>
+          <span> {{ trans('labels.link_general_settings') }}</span> <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
             
@@ -235,7 +235,7 @@
       <?php } ?>
       <?php
 
-      $route =  DB::table('settings')
+        $route =  DB::table('settings')
                  ->where('name','is_web_purchased')
                  ->where('value', 1)
                  ->first();
@@ -336,7 +336,7 @@
         </li>
       <?php } ?>
       <?php
-      $route =  DB::table('settings')
+        $route =  DB::table('settings')
                  ->where('name','is_app_purchased')
                  ->where('value', 1)
                  ->first();
@@ -367,14 +367,13 @@
       <?php } ?>
      
       <?php
-
         if($result['commonContent']['roles']!= null and $result['commonContent']['roles']->manage_admins_view == 1){
       ?>
 
-         <li class="treeview {{ Request::is('admin/admins') ? 'active' : '' }} {{ Request::is('admin/addadmins') ? 'active' : '' }} {{ Request::is('admin/editadmin/*') ? 'active' : '' }} {{ Request::is('admin/manageroles') ? 'active' : '' }} {{ Request::is('admin/addadminType') ? 'active' : '' }} {{ Request::is('admin/editadminType/*') ? 'active' : '' }}">
+        <li class="treeview {{ Request::is('admin/admins') ? 'active' : '' }} {{ Request::is('admin/addadmins') ? 'active' : '' }} {{ Request::is('admin/editadmin/*') ? 'active' : '' }} {{ Request::is('admin/manageroles') ? 'active' : '' }} {{ Request::is('admin/addadminType') ? 'active' : '' }} {{ Request::is('admin/editadminType/*') ? 'active' : '' }}">
           <a href="#">
             <i class="fa fa-users" aria-hidden="true"></i>
-  <span> {{ trans('labels.Manage Admins') }}</span> <i class="fa fa-angle-left pull-right"></i>
+            <span> {{ trans('labels.Manage Admins') }}</span> <i class="fa fa-angle-left pull-right"></i>
           </a>
 
           <ul class="treeview-menu">

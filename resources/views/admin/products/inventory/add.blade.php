@@ -197,7 +197,7 @@
                                                 <!-- MAP & BOX PANE -->
 
                                                 <!-- /.box -->
-                                                <div class="row">
+                                                {{-- <div class="row">
                                                     <!-- /.col -->
                                                     <div class="col-md-12">
                                                         <!-- USERS LIST -->
@@ -255,7 +255,7 @@
                                                     </div>
 
                                                     <!-- /.col -->
-                                                </div>
+                                                </div> --}}
                                                 <!-- /.row -->
                                             </div>
 

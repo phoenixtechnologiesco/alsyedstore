@@ -323,7 +323,8 @@ class ProductController extends Controller
         $allimage = $this->images->getimages();
         $products_images = $this->products->editProductImages($id);
         $result['commonContent'] = $this->Setting->commonContent();
-        return view("admin/products/images/edit")->with('products_images', $products_images)->with('allimage', $allimage);
+        // dd($result);
+        return view("admin/products/images/edit")->with('products_images', $products_images)->with('allimage', $allimage)->with('result', $result);
 
     }
 

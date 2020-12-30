@@ -60,15 +60,15 @@
           
          </div>
          
-         @if($products->products_type==0)
+          @if($products->products_type==0)
               @if(!in_array($products->products_id,$result['cartArray']))
                   @if($products->defaultStock==0)
-
-                      <button type="button" class="btn btn-block btn-danger swipe-to-top" products_id="{{$products->products_id}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Out of Stock')"><i class="fas fa-shopping-bag"></i> @lang('website.Out of Stock')</button>
-                  @elseif($products->products_min_order>1)
-                  <a class="btn btn-block btn-secondary swipe-to-top" href="{{ URL::to('/product-detail/'.$products->products_slug)}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.View Detail')"><i class="fas fa-shopping-bag"></i> @lang('website.View Detail')</a>
+                    <button type="button" class="btn btn-block btn-danger swipe-to-top" products_id="{{$products->products_id}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Out of Stock')"><i class="fas fa-shopping-bag"></i> @lang('website.Out of Stock')</button>
+                  {{-- @elseif($products->products_min_order>1) --}}
                   @else
-                      <button type="button" class="btn btn-block btn-secondary cart swipe-to-top" products_id="{{$products->products_id}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Add to Cart')"><i class="fas fa-shopping-bag"></i> @lang('website.Add to Cart')</button>
+                    <a class="btn btn-block btn-secondary swipe-to-top" href="{{ URL::to('/product-detail/'.$products->products_slug)}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.View Detail')"><i class="fas fa-shopping-bag"></i> @lang('website.View Detail')</a>
+                  {{-- @else
+                      <button type="button" class="btn btn-block btn-secondary cart swipe-to-top" products_id="{{$products->products_id}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Add to Cart')"><i class="fas fa-shopping-bag"></i> @lang('website.Add to Cart')</button> --}}
                   @endif
               @else
                   <button type="button" class="btn btn-block btn-secondary active swipe-to-top" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Added')"><i class="fas fa-shopping-bag"></i> @lang('website.Added')</button>

@@ -114,7 +114,7 @@
                       <tr class="d-flex">
                           <td class="col-6 col-md-6">Order Date</td>
                           <td  class="underline col-6 col-md-6" align="left">{{ date('d/m/Y', strtotime($result['orders'][0]->date_purchased))}}</td>
-                        </tr>
+                      </tr>
                     </tbody>
               </table>
 
@@ -122,9 +122,7 @@
           <div class="col-12 col-md-7">
               <div class="heading">
                   <h2>
-                
                       Shipping Details
-                 
                   </h2>
                   <hr >
                 </div>
@@ -133,13 +131,15 @@
                   <tbody>
                       <tr class="d-flex">
                         <td class="address col-12 col-md-6">{{$result['orders'][0]->delivery_name}}</td>
-
-
                       </tr>
                       <tr class="d-flex">
-                          <td  class="address col-12 col-md-12">{{$result['orders'][0]->delivery_street_address}}, {{$result['orders'][0]->delivery_city}}, {{$result['orders'][0]->delivery_state}},
-                          {{$result['orders'][0]->delivery_postcode}},  {{$result['orders'][0]->delivery_country}}</td>
-
+                          <td  class="address col-12 col-md-12">
+                          <strong>City:</strong> {{$result['orders'][0]->delivery_city}},<br>
+                          <strong>State:</strong> {{$result['orders'][0]->delivery_state}},<br>
+                          <strong>Postcode:</strong>{{$result['orders'][0]->delivery_postcode}},<br>
+                          <strong>Country:</strong>{{$result['orders'][0]->delivery_country}},<br>
+                          <strong>Address:</strong>{{$result['orders'][0]->delivery_street_address}},<br>
+                          </td>
                         </tr>
                     </tbody>
               </table>
@@ -165,8 +165,13 @@
                         <td class="address col-12">{{$result['orders'][0]->billing_name}}</td>
                       </tr>
                       <tr  class="d-flex">
-                          <td class="address col-12">{{$result['orders'][0]->billing_street_address}}, {{$result['orders'][0]->billing_city}}, {{$result['orders'][0]->billing_state}},
-                          {{$result['orders'][0]->billing_postcode}},  {{$result['orders'][0]->billing_country}}</td>
+                          <td class="address col-12">
+                            <strong>City:</strong> {{$result['orders'][0]->billing_city}},<br>
+                            <strong>State:</strong> {{$result['orders'][0]->billing_state}},<br>
+                            <strong>Postcode:</strong>{{$result['orders'][0]->billing_postcode}},<br>
+                            <strong>Country:</strong>{{$result['orders'][0]->billing_country}},<br>
+                            <strong>Address:</strong>{{$result['orders'][0]->billing_street_address}},<br>
+                          </td>
                         </tr>
                     </tbody>
               </table>

@@ -270,7 +270,6 @@
                     @lang('website.Brands')   
                   </a>
                   <div class="sub-manu collapse show multi-collapse" id="brands">
-                    
                     <ul class="unorder-list">
                       @foreach ($result['commonContent']['manufacturers'] as $item)
                       <li class="list-item">
@@ -289,7 +288,6 @@
               </div>
             </form>
                                 
-  
                   </div>
                 </div>
               

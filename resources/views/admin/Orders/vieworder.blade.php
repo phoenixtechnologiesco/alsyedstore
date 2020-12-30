@@ -54,8 +54,8 @@
             <strong>{{ $data['orders_data'][0]->customers_name }}</strong><br>
             {{ $data['orders_data'][0]->customers_street_address }} <br>
             {{ $data['orders_data'][0]->customers_city }}, {{ $data['orders_data'][0]->customers_state }} {{ $data['orders_data'][0]->customers_postcode }}, {{ $data['orders_data'][0]->customers_country }}<br>
-            {{ trans('labels.Phone') }}: {{ $data['orders_data'][0]->customers_telephone }}<br>
-            {{ trans('labels.Email') }}: {{ $data['orders_data'][0]->email }}
+            <strong>{{ trans('labels.Phone') }}:</strong> {{ $data['orders_data'][0]->customers_telephone }}<br>
+            <strong>{{ trans('labels.Email') }}:</strong> {{ $data['orders_data'][0]->email }}
           </address>
         </div>
         <!-- /.col -->
@@ -80,8 +80,8 @@
           <address>
             <strong>{{ $data['orders_data'][0]->billing_name }}</strong><br>
             {{ $data['orders_data'][0]->billing_street_address }} <br>
-            <strong>{{ trans('labels.Phone') }}: </strong>{{ $data['orders_data'][0]->billing_phone }}<br>
             {{ $data['orders_data'][0]->billing_city }}, {{ $data['orders_data'][0]->billing_state }} {{ $data['orders_data'][0]->billing_postcode }}, {{ $data['orders_data'][0]->billing_country }}<br>
+            <strong>{{ trans('labels.Phone') }}: </strong>{{ $data['orders_data'][0]->billing_phone }}<br>
           </address>
         </div>
         <!-- /.col -->
@@ -145,48 +145,44 @@
         <!-- accepted payments column -->
         <div class="col-xs-7">
           <p class="lead" style="margin-bottom:10px">{{ trans('labels.PaymentMethods') }}:</p>
-          <p class="text-muted well well-sm no-shadow" style="text-transform:capitalize">
-           	{{ str_replace('_',' ', $data['orders_data'][0]->payment_method) }}
-          </p>
+          <p class="text-muted well well-sm no-shadow" style="text-transform:capitalize">{{ str_replace('_',' ', $data['orders_data'][0]->payment_method) }}</p>
           @if(!empty($data['orders_data'][0]->coupon_code))
-              <p class="lead" style="margin-bottom:10px">{{ trans('labels.Coupons') }}:</p>
-                <table class="text-muted well well-sm no-shadow stripe-border table table-striped" style="text-align: center; ">
-                	<tr>
-                        <th style="text-align: center; ">{{ trans('labels.Code') }}</th>
-                        <th style="text-align: center; ">{{ trans('labels.Amount') }}</th>
-                    </tr>
-                	@foreach( json_decode($data['orders_data'][0]->coupon_code) as $couponData)
-                    	<tr>
-                        	<td>{{ $couponData->code}}</td>
-                            <td>{{ $couponData->amount}}
-
-                                @if($couponData->discount_type=='percent_product')
-                                    ({{ trans('labels.Percent') }})
-                                @elseif($couponData->discount_type=='percent')
-                                    ({{ trans('labels.Percent') }})
-                                @elseif($couponData->discount_type=='fixed_cart')
-                                    ({{ trans('labels.Fixed') }})
-                                @elseif($couponData->discount_type=='fixed_product')
-                                    ({{ trans('labels.Fixed') }})
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-				</table>
+            <p class="lead" style="margin-bottom:10px">{{ trans('labels.Coupons') }}:</p>
+            <table class="text-muted well well-sm no-shadow stripe-border table table-striped" style="text-align: center; ">
+                <tr>
+                  <th style="text-align: center; ">{{ trans('labels.Code') }}</th>
+                  <th style="text-align: center; ">{{ trans('labels.Amount') }}</th>
+                </tr>
+              @foreach( json_decode($data['orders_data'][0]->coupon_code) as $couponData)
+                <tr>
+                  <td>{{ $couponData->code}}</td>
+                  <td>{{ $couponData->amount}}
+                    @if($couponData->discount_type=='percent_product')
+                        ({{ trans('labels.Percent') }})
+                    @elseif($couponData->discount_type=='percent')
+                        ({{ trans('labels.Percent') }})
+                    @elseif($couponData->discount_type=='fixed_cart')
+                        ({{ trans('labels.Fixed') }})
+                    @elseif($couponData->discount_type=='fixed_product')
+                        ({{ trans('labels.Fixed') }})
+                    @endif
+                  </td>
+                </tr>
+              @endforeach
+            </table>
                <!-- {{ $data['orders_data'][0]->coupon_code }}-->
-
           @endif
           <!-- <img src="../../dist/img/credit/visa.png" alt="Visa">
           <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
           <img src="../../dist/img/credit/american-express.png" alt="American Express">
           <img src="../../dist/img/credit/paypal2.png" alt="Paypal">-->
 
-		  <p class="lead" style="margin-bottom:10px">{{ trans('labels.Orderinformation') }}:</p>
+		      {{-- <p class="lead" style="margin-bottom:10px">{{ trans('labels.Orderinformation') }}:</p>
           <p class="text-muted well well-sm no-shadow" style="text-transform:capitalize; word-break:break-all;">
            @if(trim($data['orders_data'][0]->order_information) != '[]' or !empty($data['orders_data'][0]->order_information))
            		{{ $data['orders_data'][0]->order_information }}
            @endif
-          </p>
+          </p> --}}
         </div>
         <!-- /.col -->
         <div class="col-xs-5">

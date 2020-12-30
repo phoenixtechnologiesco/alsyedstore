@@ -37,7 +37,7 @@ class OrdersController extends Controller
     }
 
     //view order detail
-    public function vieworder(Request $request)
+    public function viewOrder(Request $request)
     {
 
         $title = array('pageTitle' => Lang::get("labels.ViewOrder"));

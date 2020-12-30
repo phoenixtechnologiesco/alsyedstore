@@ -76,7 +76,7 @@
                                             <th style="display: none">{{ trans('labels.Picture') }}</th>
                                             <th>@sortablelink('first_name', trans('labels.Full Name')) </th>
                                             <th>@sortablelink('email', trans('labels.Email')) </th>
-                                            <th>{{ trans('labels.Additional info') }} </th>
+                                            <th>@sortablelink('additional_info', trans('labels.Additional info'))</th>
                                             <th>@sortablelink('entry_street_address', trans('labels.Address'))</th>
                                             <th>{{ trans('labels.Action') }}</th>
                                         </tr>

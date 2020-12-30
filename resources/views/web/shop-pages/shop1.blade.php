@@ -38,123 +38,123 @@
                     <div class="right-menu-categories">
                        @include('web.common.shopCategories')
                        @php    shopCategories(); @endphp 
-                     </div>
+                    </div>
   
               {{-- Hide filters if record does not exist --}}
               @if($result['products']['success']==1)
   
-              @if(!empty($result['categories']))
-             <form enctype="multipart/form-data" name="filters" id="test" method="get">
-               <input type="hidden" name="min_price" id="min_price" value="0">
-               <input type="hidden" name="max_price" id="max_price" value="{{$result['filters']['maxPrice']}}">
-               @if(app('request')->input('category'))
-                <input type="hidden" name="category" value="{{app('request')->input('category')}}">
-               @endif
-               @if(app('request')->input('filters_applied')==1)
-               <input type="hidden" name="filters_applied" id="filters_applied" value="1">
-               <input type="hidden" name="options" id="options" value="<?php echo implode($result['filter_attribute']['options'],',')?>">
-               <input type="hidden" name="options_value" id="options_value" value="<?php echo implode($result['filter_attribute']['option_values'], ',')?>">
-               @else
-               <input type="hidden" name="filters_applied" id="filters_applied" value="0">
-               @endif
-               <div class="range-slider-main" >
-                 <h2>@lang('website.Price Range') </h2>
-                 <div class="wrapper">
-                     <div class="range-slider">
-                         <input onChange="getComboA(this)" name="price" type="text" class="js-range-slider" value="" />
-                     </div>
-                     <div class="extra-controls form-inline">
-                       <div class="form-group">
-                           <span>
-                             @if(session('symbol_left') != null)
-                             <font>{{session('symbol_left')}}</font>
-                             @else
-                             <font>{{session('symbol_right')}}</font>
-                             @endif
-                                 <input type="text"  class="js-input-from form-control" value="0" />
-                           </span>
-                               <font>-</font>
-                               <span>
-                                 @if(session('symbol_left') != null)
-                                 <font>{{session('symbol_left')}}</font>
-                                 @else
-                                 <font>{{session('symbol_right')}}</font>
-                                 @endif
-                                   <input  type="text" class="js-input-to form-control" value="0" />
-                                   <input  type="hidden" class="maximum_price" value="{{$result['filters']['maxPrice']}}">
-                                   </span>
-                     </div>
-                       </div>
-                 </div>
-               </div>                       
-               
-               
-               @include('web.common.scripts.slider')
-                     @if(count($result['filters']['attr_data'])>0)
-                     @foreach($result['filters']['attr_data'] as $key=>$attr_data)
-                     <div class="color-range-main">
-                       <h2 @if(count($result['filters']['attr_data'])==$key+1) last @endif>{{$attr_data['option']['name']}}</h2>
-                         <div class="block">
-                                <div class="card-body">
-                                 <ul class="list" style="list-style:none; padding: 0px;">
-                                     @foreach($attr_data['values'] as $key=>$values)
-                                     <li >
-                                         <div class="form-check">
-                                           <label class="form-check-label">
-                                             <input class="form-check-input filters_box" name="{{$attr_data['option']['name']}}[]" type="checkbox" value="{{$values['value']}}" 								 									<?php
-                                             if(!empty($result['filter_attribute']['option_values']) and in_array($values['value_id'],$result['filter_attribute']['option_values'])) print 'checked';
-                                             ?>>
-                                             {{$values['value']}}
-                                           </label>
-                                         </div>
-                                     </li>
-                                     @endforeach
-                                 </ul>
-                             </div>
-                         </div>
-  
-                       </div>
-                     @endforeach
-                     @endif
-                     <div class="color-range-main">
-  
-                     <div class="alret alert-danger" id="filter_required">
-                     </div>
-  
-                     <div class="button">
-                     <?php
-                 $url = '';
-                       if(isset($_REQUEST['category'])){
-                   $url = "?category=".$_REQUEST['category'];
-                   $sign = '&';
-                 }else{
-                   $sign = '?';
-                 }
-                 if(isset($_REQUEST['search'])){
-                   $url.= $sign."search=".$_REQUEST['search'];
-                 }
-               ?>
-                   <a href="{{ URL::to('/shop')}}" class="btn btn-dark" id="apply_options"> @lang('website.Reset') </a>
-                      @if(app('request')->input('filters_applied')==1)
-                   <button type="button" class="btn btn-secondary" id="apply_options_btn"> @lang('website.Apply')</button>
-                     @else
-                   <!--<button type="button" class="btn btn-secondary" id="apply_options_btn" disabled> @lang('website.Apply')</button>-->
-                     <button type="button" class="btn btn-secondary" id="apply_options_btn" > @lang('website.Apply')</button>
-                     @endif
-                 </div>
-               </div>
-                     @if(count($result['commonContent']['homeBanners'])>0)
-                      @foreach(($result['commonContent']['homeBanners']) as $homeBanners)
-                         @if($homeBanners->type==7)
-                         <div class="img-main">
-                             <a href="{{ $homeBanners->banners_url}}" ><img class="img-fluid" src="{{asset('').$homeBanners->path}}"></a>
-                         </div>
-                       @endif
+                @if(!empty($result['categories']))
+                  <form enctype="multipart/form-data" name="filters" id="test" method="get">
+                    <input type="hidden" name="min_price" id="min_price" value="0">
+                    <input type="hidden" name="max_price" id="max_price" value="{{$result['filters']['maxPrice']}}">
+                    @if(app('request')->input('category'))
+                      <input type="hidden" name="category" value="{{app('request')->input('category')}}">
+                    @endif
+                    @if(app('request')->input('filters_applied')==1)
+                    <input type="hidden" name="filters_applied" id="filters_applied" value="1">
+                    <input type="hidden" name="options" id="options" value="<?php echo implode($result['filter_attribute']['options'],',')?>">
+                    <input type="hidden" name="options_value" id="options_value" value="<?php echo implode($result['filter_attribute']['option_values'], ',')?>">
+                    @else
+                    <input type="hidden" name="filters_applied" id="filters_applied" value="0">
+                    @endif
+                    {{-- <div class="range-slider-main" >
+                      <h2>@lang('website.Price Range') </h2>
+                      <div class="wrapper">
+                          <div class="range-slider">
+                              <input onChange="getComboA(this)" name="price" type="text" class="js-range-slider" value="" />
+                          </div>
+                          <div class="extra-controls form-inline">
+                            <div class="form-group">
+                                <span>
+                                  @if(session('symbol_left') != null)
+                                  <font>{{session('symbol_left')}}</font>
+                                  @else
+                                  <font>{{session('symbol_right')}}</font>
+                                  @endif
+                                      <input type="text"  class="js-input-from form-control" value="0" />
+                                </span>
+                                    <font>-</font>
+                                    <span>
+                                      @if(session('symbol_left') != null)
+                                      <font>{{session('symbol_left')}}</font>
+                                      @else
+                                      <font>{{session('symbol_right')}}</font>
+                                      @endif
+                                        <input  type="text" class="js-input-to form-control" value="0" />
+                                        <input  type="hidden" class="maximum_price" value="{{$result['filters']['maxPrice']}}">
+                                        </span>
+                          </div>
+                            </div>
+                      </div>
+                    </div>                        --}}
+                
+                    {{-- @include('web.common.scripts.slider')
+                    @if(count($result['filters']['attr_data'])>0)
+                      @foreach($result['filters']['attr_data'] as $key=>$attr_data)
+                        <div class="color-range-main">
+                          <h2 @if(count($result['filters']['attr_data'])==$key+1) last @endif>{{$attr_data['option']['name']}}</h2>
+                          <div class="block">
+                            <div class="card-body">
+                              <ul class="list" style="list-style:none; padding: 0px;">
+                                @foreach($attr_data['values'] as $key=>$values)
+                                <li >
+                                  <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input filters_box" name="{{$attr_data['option']['name']}}[]" type="checkbox" value="{{$values['value']}}" 								 									
+                                      ?php
+                                      if(!empty($result['filter_attribute']['option_values']) and in_array($values['value_id'],$result['filter_attribute']['option_values'])) print 'checked';
+                                      ?>
+                                      >
+                                      {{$values['value']}}
+                                    </label>
+                                  </div>
+                                </li>
+                                @endforeach
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
                       @endforeach
-                     @endif
-               </form>
-               @endif
-               @endif
+                    @endif
+                    <div class="color-range-main">
+
+                      <div class="alret alert-danger" id="filter_required">
+                      </div>
+    
+                      <div class="button">
+                        ?php
+                          $url = '';
+                                if(isset($_REQUEST['category'])){
+                            $url = "?category=".$_REQUEST['category'];
+                            $sign = '&';
+                          }else{
+                            $sign = '?';
+                          }
+                          if(isset($_REQUEST['search'])){
+                            $url.= $sign."search=".$_REQUEST['search'];
+                          }
+                        ?>
+                        <a href="{{ URL::to('/shop')}}" class="btn btn-dark" id="apply_options"> @lang('website.Reset') </a>
+                        @if(app('request')->input('filters_applied')==1)
+                          <button type="button" class="btn btn-secondary" id="apply_options_btn"> @lang('website.Apply')</button>
+                        @else
+                        <!--<button type="button" class="btn btn-secondary" id="apply_options_btn" disabled> @lang('website.Apply')</button>-->
+                        <button type="button" class="btn btn-secondary" id="apply_options_btn" > @lang('website.Apply')</button>
+                        @endif
+                      </div>
+                    </div> --}}
+                      @if(count($result['commonContent']['homeBanners'])>0)
+                        @foreach(($result['commonContent']['homeBanners']) as $homeBanners)
+                          @if($homeBanners->type==7)
+                            <div class="img-main">
+                              <a href="{{ $homeBanners->banners_url}}" ><img class="img-fluid" src="{{asset('').$homeBanners->path}}"></a>
+                            </div>
+                          @endif
+                        @endforeach
+                      @endif
+                  </form>
+                @endif
+              @endif
                     
   
               @if(!empty($result['commonContent']['manufacturers']) and count($result['commonContent']['manufacturers'])>0)

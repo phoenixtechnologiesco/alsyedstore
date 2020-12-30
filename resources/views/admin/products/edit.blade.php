@@ -50,10 +50,10 @@
                                                     <label for="name" class="col-sm-2 col-md-3 control-label">{{ trans('labels.Product Type') }} </label>
                                                     <div class="col-sm-10 col-md-8">
                                                         <select class="form-control field-validate prodcust-type" name="products_type" onChange="prodcust_type();">
-                                                            <option value="">{{ trans('labels.Choose Type') }}</option>
+                                                            {{-- <option value="">{{ trans('labels.Choose Type') }}</option> --}}
                                                             <option value="0" @if($result['product'][0]->products_type==0) selected @endif>{{ trans('labels.Simple') }}</option>
-                                                            <option value="1" @if($result['product'][0]->products_type==1) selected @endif>{{ trans('labels.Variable') }}</option>
-                                                            <option value="2" @if($result['product'][0]->products_type==2) selected @endif>{{ trans('labels.External') }}</option>
+                                                            {{-- <option value="1" @if($result['product'][0]->products_type==1) selected @endif>{{ trans('labels.Variable') }}</option>
+                                                            <option value="2" @if($result['product'][0]->products_type==2) selected @endif>{{ trans('labels.External') }}</option> --}}
                                                         </select><span class="help-block" style="font-weight: normal;font-size: 11px;margin-bottom: 0;">
                                                             {{ trans('labels.Product Type Text') }}.</span>
                                                     </div>
@@ -135,7 +135,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-xs-12 col-md-6">
+                                            {{-- <div class="col-xs-12 col-md-6">
                                                 <div class="form-group" id="tax-class">
                                                     <label for="name" class="col-sm-2 col-md-3 control-label">{{ trans('labels.TaxClass') }} </label>
                                                     <div class="col-sm-10 col-md-8">
@@ -154,7 +154,7 @@
                                                         <span class="help-block hidden">{{ trans('labels.SelectProductTaxClass') }}</span>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                         </div>
                                         <div class="row">

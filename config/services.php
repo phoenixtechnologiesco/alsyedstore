@@ -44,9 +44,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
     'facebook' => [
-      'client_id' => 'FB_CLIENT_ID',
-      'client_secret' => 'FB_SECRET_KEY',
-      'redirect' => 'http://YOUR_DOMAIN_NAME/login/facebook/callback',
+      'client_id' => '308364937215824',
+      'client_secret' => 'e6a45c09b2ce0fea7ad5cb0219b47308',
+      'redirect' => 'https://alsyedstore.com/login/facebook/callback/',
     ],
 
 

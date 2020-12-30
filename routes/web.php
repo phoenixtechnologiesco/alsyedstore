@@ -17,11 +17,6 @@ Route::group(['namespace' => 'Web','middleware' => ['installer']], function () {
 Route::get('/login', 'CustomersController@login');
 Route::post('/process-login', 'CustomersController@processLogin');
 Route::get('/logout', 'CustomersController@logout')->middleware('Customer');
-
-Route::get('/test/purchase', 'OtpController@confirmationPage');
-Route::post('/test/otp-request', 'OtpController@requestForOtp')->name('requestForOtp');
-Route::post('/test/otp-validate', 'OtpController@validateOtp')->name('validateOtp');
-Route::post('/test/otp-resend', 'OtpController@resendOtp')->name('resendOtp');
 });
 Route::group(['namespace' => 'Web','middleware' => $middleware], function () {
 	Route::get('general_error/{msg}', function($msg) {

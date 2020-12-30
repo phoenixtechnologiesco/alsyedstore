@@ -355,7 +355,7 @@ Route::group(['middleware' => ['installer']], function () {
 
     Route::group(['prefix' => 'admin/orders', 'middleware' => 'auth', 'namespace' => 'AdminControllers'], function () {
         Route::get('/display', 'OrdersController@display')->middleware('view_order');
-        Route::get('/vieworder/{id}', 'OrdersController@vieworder')->middleware('view_order');
+        Route::get('viewOrder/{id}', 'OrdersController@viewOrder')->middleware('view_order');
         Route::post('/updateOrder', 'OrdersController@updateOrder')->middleware('edit_order');
         Route::post('/deleteOrder', 'OrdersController@deleteOrder')->middleware('edit_order');
         Route::get('/invoiceprint/{id}', 'OrdersController@invoiceprint')->middleware('view_order');

@@ -17,6 +17,8 @@ use App\Models\Web\Languages;
 use App\Models\Web\Order;
 use App\Models\Web\Products;
 use App\Models\Web\Shipping;
+use App\Models\Core\Setting;
+
 
 //for Carbon a value
 use Auth;
@@ -37,7 +39,8 @@ class OrdersController extends Controller
         Currency $currency,
         Cart $cart,
         Shipping $shipping,
-        Order $order
+        Order $order,
+        Setting $Setting
     ) {
         $this->index = $index;
         $this->languages = $languages;
@@ -47,6 +50,8 @@ class OrdersController extends Controller
         $this->shipping = $shipping;
         $this->order = $order;
         $this->theme = new ThemeController();
+        $setting = new Setting();
+        $this->Setting = $setting;
     }
 
     //test stripe
@@ -98,7 +103,6 @@ class OrdersController extends Controller
 
             if (empty(session('step'))) {
                 session(['step' => '0']);
-                // session(['step' => '1']);
             }
 
             if (empty(session('checkout_type'))) {
@@ -120,7 +124,8 @@ class OrdersController extends Controller
                     
                 }
             }
-            
+            // dd(session(['shipping_address' => []]));
+
             if (empty(session('shipping_address'))) {
                 session(['shipping_address' => $address]);
             }
@@ -142,11 +147,6 @@ class OrdersController extends Controller
             if (empty(session('pickup_address'))) {
                 session(['pickup_address' => $pickup_address]);
             }
-
-            // session(['pickup_address' => $pickup_address]);
-            // session(['billing_address' => $pickup_address]);
-
-            // dd(session('pickup_address'));
 
             //shipping counties
             if (!empty(session('shipping_address')->countries_id)) {
@@ -199,6 +199,12 @@ class OrdersController extends Controller
                 session(['products_price' => $price]);
             }
 
+            // $settings = $this->Setting->getallsetting();
+            // $result['settings'] = $settings->unique('id')->keyBy('id');
+            $result['settingsContent'] = $this->Setting->commonContent();
+            // $result['commonContent']['setting'];
+            // dd($result);
+
             // session(['step' => '0']);
             // session(['checkout_type' => 'delivery']);
                 // OR
@@ -206,7 +212,7 @@ class OrdersController extends Controller
             // session(['checkout_type' => 'pickup']);
             // session(['pickup_address' => NULL]);
 
-            // //breaintree token
+            // //braintree token
             // $token = $this->generateBraintreeTokenWeb();
             // session(['braintree_token' => $token]);            
 
@@ -218,9 +224,11 @@ class OrdersController extends Controller
     public function checkoutType(Request $request){
         if($request->type == "delivery") {
             session(['checkout_type' => 'delivery']);
+            session(['step' => 0]);
         }
         else{
             session(['checkout_type' => 'pickup']);
+            session(['step' => 1]);
         }
 
         return session('checkout_type');
@@ -228,72 +236,15 @@ class OrdersController extends Controller
     }
 
     //checkout
-    public function checkout_pickup_address(Request $request){  
-        
-        // dd($request->all());
-        
-        // $title = array('pageTitle' => Lang::get('website.Checkout'));
-        $result = array();
-        $result['commonContent'] = $this->index->commonContent();
-
-        if (session('step') == '1') {
-            session(['step' => '2']);
-        }
-        $pickup_data = array();
-        $billing_data = array();
-
-        foreach ($request->all() as $key => $value){
-
-            $pickup_data[$key] = $value;
-
-            //billing address
-            if ($key == 'pickup_firstname') {
-                $billing_data['billing_firstname'] = $value;
-            } else if ($key == 'pickup_lastname') {
-                $billing_data['billing_lastname'] = $value;
-            } else if ($key == 'pickup_company') {
-                $billing_data['billing_company'] = $value;
-            } else if ($key == 'pickup_street') {
-                $billing_data['billing_street'] = $value;
-            } else if ($key == 'pickup_countries_id') {
-                $billing_data['billing_countries_id'] = $value;
-            } else if ($key == 'pickup_zone_id') {
-                $billing_data['billing_zone_id'] = $value;
-            } else if ($key == 'pickup_city') {
-                $billing_data['billing_city'] = $value;
-            } else if ($key == 'pickup_zip') {
-                $billing_data['billing_zip'] = $value;
-            } else if ($key == 'pickup_phone') {
-                $billing_data['billing_phone'] = $value;
-            }
-
-        }
-
-        if (empty(session('billing_address')) or session('billing_address')->same_billing_address == 1) {
-            $billing_address = (object)$billing_data;
-            // dd(session('billing_address'));
-            $billing_address->same_billing_address = 1;
-            session(['billing_address' => $billing_address]);
-        }
-
-        $address = (object) $pickup_data;
-        session(['pickup_address' => $address]);
-
-        // return response()->json(["request_all" => $request->all(), "result" => $result]);
-        return redirect()->back();
-    }
-
-    //checkout
     public function checkout_shipping_address(Request $request)
     {
-        // dd($request->all());
 
         $title = array('pageTitle' => Lang::get('website.Checkout'));
         $result = array();
         $result['commonContent'] = $this->index->commonContent();
 
         if (session('step') == '0') {
-            session(['step' => '2']);
+            session(['step' => '1']);
         }
 
         foreach ($request->all() as $key => $value) {
@@ -329,6 +280,7 @@ class OrdersController extends Controller
 
         $address = (object) $shipping_data;
         session(['shipping_address' => $address]);
+        // dd(session('shipping_address'));
 
         return redirect()->back();
     }
@@ -336,8 +288,8 @@ class OrdersController extends Controller
     //checkout_billing_address
     public function checkout_billing_address(Request $request)
     {
-        if (session('step') == '2') {
-            session(['step' => '3']);
+        if (session('step') == '1') {
+            session(['step' => '2']);
         }
 
         if (empty($request->same_billing_address)) {
@@ -363,8 +315,8 @@ class OrdersController extends Controller
     public function checkout_payment_method(Request $request)
     {
 
-        if (session('step') == '3') {
-            session(['step' => '4']);
+        if (session('step') == '2') {
+            session(['step' => '3']);
         }
         $result['commonContent'] = $this->index->commonContent();
 
@@ -382,7 +334,6 @@ class OrdersController extends Controller
 
         }
         session(['shipping_detail' => (object) $shipping_detail]);
-
         return redirect()->back();
 
     }
@@ -725,8 +676,8 @@ class OrdersController extends Controller
     public function getPaymentMethods()
     {
 
-        // /**   BRAIN TREE **/
-        // //////////////////////
+        /**   BRAIN TREE **/
+        //////////////////////
         // $result = array();
         // $payments_setting = $this->order->payments_setting_for_brain_tree();
         // if ($payments_setting['merchant_id']->environment == '0') {
@@ -743,11 +694,11 @@ class OrdersController extends Controller
         //     'payment_method' => $payments_setting['merchant_id']->payment_method,
         //     'payment_currency' => Session::get('currency_code'),
         // );
-        // /**  END BRAIN TREE **/
-        // //////////////////////
+        /**  END BRAIN TREE **/
+        //////////////////////
 
-        // /**   STRIPE**/
-        // //////////////////////
+        /**   STRIPE**/
+        //////////////////////
 
         // $payments_setting = $this->order->payments_setting_for_stripe();
         // if ($payments_setting['publishable_key']->environment == '0') {
@@ -765,8 +716,8 @@ class OrdersController extends Controller
         //     'payment_method' => $payments_setting['publishable_key']->payment_method,
         // );
 
-        // /**   END STRIPE**/
-        // //////////////////////
+        /**   END STRIPE**/
+        //////////////////////
 
         /**   CASH ON DELIVERY**/
         //////////////////////
@@ -785,8 +736,8 @@ class OrdersController extends Controller
         /**   END CASH ON DELIVERY**/
         /*************************/
 
-        // /**   PAYPAL**/
-        // /*************************/
+        /**   PAYPAL**/
+        /*************************/
         // $payments_setting = $this->order->payments_setting_for_paypal();
 
         // if ($payments_setting['id']->environment == '0') {
@@ -805,11 +756,11 @@ class OrdersController extends Controller
 
         // );
 
-        // /**   END PAYPAL**/
-        // /*************************/
+        /**   END PAYPAL**/
+        /*************************/
 
-        // /**   INSTAMOJO**/
-        // /*************************/
+        /**   INSTAMOJO**/
+        /*************************/
         // $payments_setting = $this->order->payments_setting_for_instamojo();
         // if ($payments_setting['auth_token']->environment == '0') {
         //     $instamojo_enviroment = 'Test';
@@ -826,11 +777,11 @@ class OrdersController extends Controller
         //     'payment_method' => $payments_setting['api_key']->payment_method,
         // );
 
-        // /**   END INSTAMOJO**/
-        // /*************************/
+        /**   END INSTAMOJO**/
+        /*************************/
 
-        // /**   END HYPERPAY**/
-        // /*************************/
+        /**   END HYPERPAY**/
+        /*************************/
         // $payments_setting = $this->order->payments_setting_for_hyperpay();
         // //dd($payments_setting);
         // if ($payments_setting['userid']->environment == '0') {
@@ -847,8 +798,8 @@ class OrdersController extends Controller
         //     'payment_currency' => Session::get('currency_code'),
         //     'payment_method' => $payments_setting['userid']->payment_method,
         // );
-        // /**   END HYPERPAY**/
-        // /*************************/
+        /**   END HYPERPAY**/
+        /*************************/
 
         // $payments_setting = $this->order->payments_setting_for_razorpay();
         

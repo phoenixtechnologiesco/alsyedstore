@@ -131,10 +131,11 @@
             @if($products->defaultStock==0)
 
                 <button type="button" class="btn  btn-danger" products_id="{{$products->products_id}}">@lang('website.Out of Stock')</button>
-            @elseif($products->products_min_order>1)
-            <a class="btn  btn-secondary" href="{{ URL::to('/product-detail/'.$products->products_slug)}}">@lang('website.View Detail')</a>
+            {{-- @elseif($products->products_min_order>1) --}}
             @else
-                <button type="button" class="btn  btn-secondary cart" products_id="{{$products->products_id}}">@lang('website.Add to Cart')</button>
+            <a class="btn  btn-secondary" href="{{ URL::to('/product-detail/'.$products->products_slug)}}">@lang('website.View Detail')</a>
+            {{-- @else
+                <button type="button" class="btn  btn-secondary cart" products_id="{{$products->products_id}}">@lang('website.Add to Cart')</button> --}}
             @endif
         @else
             <button type="button" class="btn btn-secondary active">@lang('website.Added')</button>

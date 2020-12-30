@@ -7,7 +7,7 @@
          <div class="row justify-content-center">
            <div class="col-12 col-lg-6">
              <div class="pro-heading-title">
-               <h2> @lang('website.PRODUCT CATEGORIES')
+               <h2> Brands{{-- @lang('website.PRODUCTCATEGORIES') --}}
                </h2>
                <p>
                  @lang('website.Categories Text For Home Page')
@@ -18,22 +18,20 @@
       
       </div>
     </div>
-   <div class="row">
+   <div class="row" style="margin-right:20px; margin-left:20px">
     <?php $counter = 0;?>
     @foreach($result['commonContent']['categories'] as $categories_data)
         @if($counter<=7)
         
-          <div class="col-12 col-md-6 col-lg-3 cat-banner">
-            
+          <div class="col-6 col-md-3 col-lg-3 cat-banner">
             <figure class="categories-image">
               <a href="{{ URL::to('/shop?category='.$categories_data->slug)}}">
                 <img class="img-fluid" src="{{asset('').$categories_data->path}}" alt="{{$categories_data->name}}">
-                <div class="categories-title">
+                <div {{-- style="height:40px" --}} class="categories-title">
                   <h3>{{$categories_data->name}}</h3>
                 </div>
               </a>
             </figure>
-
           </div>
 
         @endif

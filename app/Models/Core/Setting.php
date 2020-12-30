@@ -5,6 +5,7 @@ namespace App\Models\Core;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class Setting extends Model
 {
@@ -532,9 +533,10 @@ class Setting extends Model
 
     public function commonContent()
     {
+        // dd(Auth::user()->attributes['role_id']);
         $result = array();
         $roles = DB::table('manage_role')
-                   ->where('user_types_id',Auth()->user()->role_id)
+                   ->where('user_types_id', Auth()->user()->attributes['role_id'])
                    ->first();
 
         $result['roles'] = $roles;        

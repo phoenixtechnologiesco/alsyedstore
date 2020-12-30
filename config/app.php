@@ -177,7 +177,6 @@ return [
          */
          Anand\LaravelPaytmWallet\PaytmWalletServiceProvider::class,
          Madnest\Madzipper\MadzipperServiceProvider::class,
-         Ferdous\OtpValidator\OtpValidatorServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -244,7 +243,6 @@ return [
         'Image' => 'Folklore\Image\Facades\Image',
         'Madzipper' => Madnest\Madzipper\Madzipper::class,
         'PaytmWallet' => Anand\LaravelPaytmWallet\Facades\PaytmWallet::class,
-        'OtpValidator' => Ferdous\OtpValidator\OtpValidatorServiceProvider::class,
     ],
 
 ];

@@ -9,12 +9,8 @@
             <div class="product-hover d-none d-lg-block d-xl-block">
               <div class="icons">    
 
-                <div class="icon swipe-to-top modal_show " categories_id ="{{$categories->categories_id}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Quick View')">
-                  <i class="fas fa-eye"></i>
-                </div>
-
               </div>
-                    <a class="btn btn-block  btn-secondary swipe-to-top" href="{{ URL::to('shop?category='.$categories->slug)}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.View')">@lang('website.View')</a>
+                    <a class="btn btn-block btn-secondary swipe-to-top" href="{{ URL::to('shop?category='.$categories->slug)}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.View')">@lang('website.View')</a>
                     {{-- <a href="shop?category={{$categories->slug}}" target="_blank" class="btn btn-block  btn-secondary swipe-to-top" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Category Link')">@lang('website.Category Link')</a> --}}
             </div>
             <img class="img-fluid" src="{{asset('').$categories->image_path}}" alt="{{$categories->categories_name}}">
