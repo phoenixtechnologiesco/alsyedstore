@@ -172,7 +172,7 @@
 
                                                                 <!-- /.users-list -->
                                                             </div>
-                                                            <?php dd($result['attributes']) ?>
+                                                            {{-- ?php dd($result['attributes']) ?> --}}
 
                                                             {{-- @if(count($result['attributes'])>0 and $result['products'][0]->products_type==1 or $result['products'][0]->products_type==0) --}}
                                                             <!-- /.box-body -->

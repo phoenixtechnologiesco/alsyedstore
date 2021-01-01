@@ -10,6 +10,6 @@
 	
 	{{ $data['message'] }}<br><br>
 	<strong>{{ trans('labels.Sincerely') }},</strong><br>
-	{{ trans('labels.ecommerceAppTeam') }}
+	{{ trans('labels.alSyedStore') }}
 </p>
 </div>

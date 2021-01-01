@@ -150,7 +150,7 @@
               </div>
               <div class="col-12 col-md-6">
                   <div class="footer-image">
-                      <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}">
+                      {{-- <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}"> --}}
                   </div>
 
               </div>

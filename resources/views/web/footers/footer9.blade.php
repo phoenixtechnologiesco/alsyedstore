@@ -12,7 +12,7 @@
                     </div>
                     <div class="footer-image mb-3">
                         <h5>@lang('website.We Using safe payments')</h5>
-                          <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}">
+                          {{-- <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}"> --}}
                       </div>
                 </div>
                 <div class="col-6">

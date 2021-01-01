@@ -116,7 +116,6 @@ jQuery(document).ready(function() {
                           <input type="text" required class="form-control field-validate" id="lastname" name="lastname" value="@if(!empty(session('shipping_address'))){{session('shipping_address')->lastname}}@endif" aria-describedby="NameHelp1" placeholder="Enter Your Last Name">
                           <span style="color:red;" class="help-block error-content" hidden>@lang('website.Please enter your last name')</span>
                         </div>
-                        
                         <?php if(Session::get('guest_checkout') == 1){ ?>
                         <div class="form-group">
                           <label for=""> @lang('website.Email')</label>
@@ -129,7 +128,6 @@ jQuery(document).ready(function() {
                           <input type="text" required class="form-control field-validate" id="company" aria-describedby="companyHelp" placeholder="Enter Your Company Name" name="company" value="@if(!empty(session('shipping_address'))) {{session('shipping_address')->company}}@endif">
                           <span style="color:red;" class="help-block error-content" hidden>@lang('website.Please enter your company name')</span>
                         </div>
-
                         <div class="form-group">
                           <label for=""> @lang('website.Address')</label>
                           <input type="text" required class="form-control field-validate" name="street" id="street" aria-describedby="addressHelp" placeholder="@lang('website.Please enter your address')" value="@if(!empty(session('shipping_address'))) {{session('shipping_address')->street}}@endif">
@@ -868,9 +866,9 @@ if(!empty($result['settingsContent']['setting'])){
             // var myText = document.getElementById("pickup").text;
             // document.getElementById('label_SA').innerHTML = "Pickup Address";
             $("#label_SA").text("Pickup Address");
-            
-            var fnValue = "";
-            var lnValue = "";
+
+            var fnValue = session('shipping_address')->firstname;
+            var lnValue = session('shipping_address')->lastname;
             var cValue = "Al-Syed Store";
             var aValue = "Shahrah-e-Usman, Sector 5c/4 Sector 5 C 4 North Karachi Twp Karachi Sindh, 75850 Pakistan";
             var pValue = "+923122887239";

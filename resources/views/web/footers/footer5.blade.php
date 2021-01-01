@@ -12,8 +12,8 @@
                   <a href="#"><img class="img-fluid" src="web/images/miscellaneous/app-store-btn.png" alt="appstore"></a>
                 </div>
                 <div class="footer-image mb-3">
-                    <h5>@lang('website.We Using safe payments')</h5>
-                      <img class="img-fluid" src="web/images/miscellaneous/payments.png" alt="image">
+                    {{-- <h5>@lang('website.We Using safe payments')</h5> --}}
+                      {{-- <img class="img-fluid" src="web/images/miscellaneous/payments.png" alt="image"> --}}
                   </div>
             </div>
           </div>

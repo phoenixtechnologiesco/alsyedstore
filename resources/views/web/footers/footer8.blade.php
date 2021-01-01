@@ -78,7 +78,7 @@
                       <hr>
                     </div>
                   </div>
-                  <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}">
+                  {{-- <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}"> --}}
             </div>
         </div>
       </div>

@@ -541,7 +541,8 @@ return [
 
 	'Gender'=>'Gender',
 
-	'Ecommerce'=>'Ecommerce',
+	// 'Ecommerce'=>'Ecommerce',
+	'Ecommerce'=>'Al-Syed Store',
 
 	'Featured'=>'Featured',
 
@@ -693,7 +694,9 @@ return [
 	'Password has been updated successfully'=>'Password has been updated successfully!',
 
 	'Record not found'=>'Record not found!',
-	'contact us title'=>'Ecommerce Contact Us',
+	// 'contact us title'=>'Ecommerce Contact Us',
+	'contact us title'=>'Al-Syed Store Contact Us',
+
 	'Follow Us'=>'Follow Us',
 
 	'Shipping addresses are not added yet'=>'Shipping addresses are not added yet.',

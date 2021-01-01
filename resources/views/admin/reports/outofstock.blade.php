@@ -30,7 +30,7 @@
                   <thead>
                     <tr>
                       <th>{{ trans('labels.ID') }}</th>
-                      <th>{{ trans('labels.Image') }}</th>
+                      {{-- <th>{{ trans('labels.Image') }}</th> --}}
                       <th>{{ trans('labels.Products') }}</th>
                       <!--<th>{{ trans('labels.Quantity') }}</th>-->
                       <th>{{ trans('labels.ViewStock') }}</th>
@@ -42,7 +42,7 @@
                                 
                             <tr>
                                 <td>{{ $outOfStockData->products_id }}</td>
-                                <td><img src="{{asset('').'/'.$outOfStockData->products_image}}" alt="" width=" 100px" height="100px"></td>
+                                {{-- <td><img src="{{asset('images/media/').'/'.$outOfStockData->products_image}}" alt="" width=" 100px" height="100px"></td> --}}
                                 <td width="45%">
                                     <strong>{{ $outOfStockData->products_name }} ( {{ $outOfStockData->products_model }} )</strong><br>
                                 </td>

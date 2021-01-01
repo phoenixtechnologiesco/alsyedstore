@@ -139,7 +139,7 @@
                                                               @if(/*count($result['attributes'])>0 and */$result['products'][0]->products_type==1 or $result['products'][0]->products_type==0)
                                                                 <!-- /.box-body -->
                                                                 <div class="box-footer text-center">
-                                                                    <? dd($result['attributes']); ?>
+                                                                    {{-- ? dd($result['attributes']); ?> --}}
                                                                     <button type="submit" id="attribute-btn" class="btn btn-primary pull-right">{{ trans('labels.Add Stock') }}</button>
                                                                 </div>
                                                               @endif

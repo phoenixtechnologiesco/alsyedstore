@@ -54,7 +54,7 @@
                 </div>
                 <div class="socials">
                     <h5>@lang('payment method')</h5>
-                    <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}">
+                    {{-- <img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}"> --}}
                 </div>
               </div>
         </div>
