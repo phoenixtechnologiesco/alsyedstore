@@ -506,6 +506,16 @@ class ProductsController extends Controller
              $products = '';
              $result['detail']['product_data'] = '';
          }
+
+         if ($result['detail']['product_data'][0]->isLiked == 1) {
+            session(['wishlist-button' => 'add']);
+         }
+         elseif($result['detail']['product_data'][0]->isLiked == 0){
+            session(['wishlist-button' => 'remove']);
+         }
+        //  if (empty(session('wishlist-button'))) {
+        //     session(['wishlist-button' => 'add']);
+        //  }
          return view("web.detail", ['title' => $title, 'final_theme' => $final_theme])->with('result', $result);
      }
 

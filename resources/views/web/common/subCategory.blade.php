@@ -10,23 +10,25 @@
               <div class="icons">    
 
               </div>
-                    <a class="btn btn-block btn-secondary swipe-to-top" href="{{ URL::to('shop?category='.$categories->slug)}}" data-toggle="tooltip" data-placement="bottom" title="@lang('website.View')">@lang('website.View')</a>
+                    {{-- @lang('website.View') --}}
                     {{-- <a href="shop?category={{$categories->slug}}" target="_blank" class="btn btn-block  btn-secondary swipe-to-top" data-toggle="tooltip" data-placement="bottom" title="@lang('website.Category Link')">@lang('website.Category Link')</a> --}}
             </div>
             <img class="img-fluid" src="{{asset('').$categories->image_path}}" alt="{{$categories->categories_name}}">
         </div>
         <div class="content">
             <span class="tag">
-                <?php 
-                
-                $cat_name = '';
-                $cate = [];
+                <a class="btn btn-block btn-secondary swipe-to-top" href="{{ URL::to('shop?category='.$categories->slug)}}">
+                  <?php 
+                  
+                  $cat_name = '';
+                  $cate = [];
 
-                // foreach($cate as $key=>$category){
-                    $cat_name = $categories->categories_name;
-                // }
-                echo $cat_name;
-                ?>         
+                  // foreach($cate as $key=>$category){
+                      $cat_name = $categories->categories_name;
+                  // }
+                  echo $cat_name;
+                  ?>
+                </a>      
             </span>
             {{-- <h5 class="title text-center"><a href="{{ URL::to('/product-detail/'.$products->products_slug)}}">{{$products->products_name}}</a></h5> --}}
             {{-- <div class="expand-detail">

@@ -340,6 +340,17 @@ class IndexController extends Controller
         return redirect()->back()->with('success', Lang::get("website.contact us message"));
     }
 
+    //AboutUs
+    public function aboutus(Request $request)
+    {
+        $title = array('pageTitle' => Lang::get("website.About Us"));
+        $result = array();
+        $final_theme = $this->theme->theme();
+        $result['commonContent'] = $this->index->commonContent();
+
+        return view("web.about-us", ['title' => $title, 'final_theme' => $final_theme])->with('result', $result);
+    }
+
     //setcookie
     public function setcookie(Request $request)
     {

@@ -412,8 +412,10 @@ class Customer extends Model
         } else {
             $limit = 15;
         }
+        // $type = "special";
+        $type = "wishlist";
 
-        $data = array('page_number' => 0, 'type' => 'wishlist', 'limit' => $limit, 'categories_id' => '', 'search' => '', 'min_price' => '', 'max_price' => '');
+        $data = array('page_number' => 0, 'type' => $type, 'limit' => $limit, 'categories_id' => '', 'search' => '', 'min_price' => '', 'max_price' => '');
         $products = $productss->products($data);
         $result['products'] = $products;
         $cart = '';

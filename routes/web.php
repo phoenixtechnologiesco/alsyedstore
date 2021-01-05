@@ -122,6 +122,8 @@ Route::group(['namespace' => 'Web','middleware' => $middleware], function () {
 		Route::post('/subscribeNotification/', 'CustomersController@subscribeNotification');
 		Route::get('/contact', 'IndexController@contactus');
 		Route::post('/processContactUs', 'IndexController@processContactUs');
+
+		Route::get('/aboutus', 'IndexController@aboutus');
 		
 		Route::get('/setcookie', 'IndexController@setcookie');
 		Route::get('/newsletter', 'IndexController@newsletter');
@@ -131,3 +133,8 @@ Route::group(['namespace' => 'Web','middleware' => $middleware], function () {
 	});
 
 	Route::get('/test', 'Web\IndexController@test1');
+
+	Route::get('/storage_link', function(){
+		Artisan::call('storage:link');
+		dd('success');
+	});

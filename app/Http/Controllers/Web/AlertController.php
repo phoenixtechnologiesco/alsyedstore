@@ -44,6 +44,10 @@ class AlertController extends Controller
 	}
 
 	//listingDevices
+	public function loginUserAlert($existUser){
+
+	}
+
 	public function createUserAlert($existUser){
 
 		//alert setting
@@ -80,11 +84,11 @@ class AlertController extends Controller
 				$functionName = 'onesignalNotification';
 			}
 
-			//get device id
-			$device_id = $this->userDevice($existUser[0]->customers_id);
-			if(!empty($device_id)){
-				$response = $this->$functionName($device_id, $sendData);
-			}
+			// //get device id
+			// $device_id = $this->userDevice($existUser[0]->customers_id);
+			// if(!empty($device_id)){
+			// 	$response = $this->$functionName($device_id, $sendData);
+			// }
 		}
 
 
@@ -101,37 +105,41 @@ class AlertController extends Controller
 		$ordersData['app_name'] = $setting[18]->value;
 		$ordersData['orders_data'][0]->admin_email = $setting[70]->value;
 
+
 		if($alertSetting[0]->order_email==1){
-
-			//admin email
-			if(!empty($ordersData['orders_data'][0]->admin_email)){
-				try {
-				Mail::send('/mail/orderEmail', ['ordersData' => $ordersData], function($m) use ($ordersData){
-					$m->to($ordersData['orders_data'][0]->admin_email)->subject(Lang::get("labels.Ecommerce App: An order has been placed"))->getSwiftMessage()
-					->getHeaders()
-					->addTextHeader('x-mailgun-native-send', 'true');
-				});
-			} catch (\Exception $e) {
-
-					return view('errors.not_install');
-			}
-			}
 
 			//customer email
 			if(!empty($ordersData['orders_data'][0]->email)){
 				try {
-
-					Mail::send('/mail/orderEmail', ['ordersData' => $ordersData], function($m) use ($ordersData){
-						$m->to($ordersData['orders_data'][0]->email)->subject(Lang::get("labels.Ecommerce App: An order has been placed"))->getSwiftMessage()
+					$result = Mail::send('/mail/orderEmail', ['ordersData' => $ordersData], function($m) use ($ordersData){
+						$m->to($ordersData['orders_data'][0]->email)->subject(Lang::get("labels.Ecommerce App: An order has been placed"))
+						->getSwiftMessage()
 						->getHeaders()
 						->addTextHeader('x-mailgun-native-send', 'true');
+					
 					});
 
-					} catch (\Exception $e) {
+				} catch (\Exception $e) {
+
+					return view('errors.not_install');
+				}
+
+			}
+
+			//admin email
+			if(!empty($ordersData['orders_data'][0]->admin_email)){
+				try {
+					Mail::send('/mail/orderEmail', ['ordersData' => $ordersData], function($m) use ($ordersData){
+						$m->to($ordersData['orders_data'][0]->admin_email)->subject(Lang::get("labels.Ecommerce App: An order has been placed"))->getSwiftMessage()
+						->getHeaders()
+						->addTextHeader('x-mailgun-native-send', 'true');
+				});
+				} catch (\Exception $e) {
 
 						return view('errors.not_install');
-					}
+				}
 			}
+
 		}
 
 		if($alertSetting[0]->order_notification==1){
@@ -154,12 +162,12 @@ class AlertController extends Controller
 				$functionName = 'onesignalNotification';
 			}
 
-			//get device id
-			$device_id = $this->userDevice($ordersData['orders_data'][0]->customers_id);
+			// //get device id
+			// $device_id = $this->userDevice($ordersData['orders_data'][0]->customers_id);
 
-			if(!empty($device_id)){
-				$response = $this->$functionName($device_id, $sendData);
-			}
+			// if(!empty($device_id)){
+			// 	$response = $this->$functionName($device_id, $sendData);
+			// }
 		}
 	}
 

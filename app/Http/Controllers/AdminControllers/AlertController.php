@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Lang;
 class AlertController extends Controller
 {
 
+    public function __construct(Setting $setting)
+    {
+        $this->myVarsetting = $setting;
 
+    }
     //new product notifications
     public function newProductNotification($products_id){
         $result = array();
@@ -84,7 +88,7 @@ class AlertController extends Controller
 
             //status change push notifications
 
-            $setting = $this->myVarsetting->getSetting();
+            $setting = $myVar->getSetting();
 
             $devices = DB::table('devices')
                 ->where('status','=', 1)
@@ -162,7 +166,7 @@ class AlertController extends Controller
 
             //status change push notifications
 
-            $setting = $this->myVarsetting->getSetting();
+            $setting = $myVar->getSetting();
 
 
             $devices = DB::table('devices')

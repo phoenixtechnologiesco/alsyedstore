@@ -198,7 +198,6 @@
           
           <div class="price">                     
             <?php
-
             if(!empty($result['detail']['product_data'][0]->discount_price)){
               $discount_price = $result['detail']['product_data'][0]->discount_price * session('currency_value');
             }
@@ -414,7 +413,9 @@
 
           <div class="pro-sub-buttons">
               <div class="buttons">
-                  <button class="btn btn-link is_liked" products_id="<?=$result['detail']['product_data'][0]->products_id?>" style="padding-left: 0;"><i class="fas fa-heart"></i> @lang('website.Add to Wishlist') </button>
+                  {{-- @if($result['detail']['product_data'][0]->isLiked == 0) --}}
+                  <button class="btn btn-link is_liked" products_id="<?=$result['detail']['product_data'][0]->products_id?>" style="padding-left: 0;" id="add_to_wishlist"><i class="fas fa-heart"></i> @if(session('wishlist-button')=='remove')Add to Wishlist @endif @if(session('wishlist-button')=='add')Remove from Wishlist @endif </button>
+                  {{-- @endif --}}
                   <button type="button" class="btn btn-link" onclick="myFunction3({{$result['detail']['product_data'][0]->products_id}})"><i class="fas fa-align-right"></i>@lang('website.Add to Compare')</button>
               
               </div>
@@ -635,9 +636,9 @@
     
       @if(!empty($result['detail']['product_data'][0]->flash_start_date))
          @if( date("Y-m-d",$result['detail']['product_data'][0]->server_time) >= date("Y-m-d",$result['detail']['product_data'][0]->flash_start_date))
-          var product_div_{{$result['detail']['product_data'][0]->products_id}} = 'product_div_{{$result['detail']['product_data'][0]->products_id}}';
-        var  counter_id_{{$result['detail']['product_data'][0]->products_id}} = 'counter_{{$result['detail']['product_data'][0]->products_id}}';
-        var inputTime_{{$result['detail']['product_data'][0]->products_id}} = "{{date('M d, Y H:i:s' ,$result['detail']['product_data'][0]->flash_expires_date)}}";
+          var product_div_{{$result['detail']['product_data'][0]->products_id}} = "product_div_{{$result['detail']['product_data'][0]->products_id}}";
+          var  counter_id_{{$result['detail']['product_data'][0]->products_id}} = "counter_{{$result['detail']['product_data'][0]->products_id}}";
+          var inputTime_{{$result['detail']['product_data'][0]->products_id}} = "{{date('M d, Y H:i:s' ,$result['detail']['product_data'][0]->flash_expires_date)}}";
     
         // Set the date we're counting down to
         var countDownDate_{{$result['detail']['product_data'][0]->products_id}} = new Date(inputTime_{{$result['detail']['product_data'][0]->products_id}}).getTime();

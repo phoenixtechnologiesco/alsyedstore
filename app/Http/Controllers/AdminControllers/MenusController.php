@@ -9,15 +9,18 @@ use Illuminate\Http\Request;
 use App\Models\Core\Setting;
 use App\Models\Core\Categories;
 use App\Models\Core\Products;
+use App\Models\Core\Pages;
 use Lang;
 
 class MenusController extends Controller
 {
-	public function __construct(Setting $setting, Categories $categories, Products $products)
+	public function __construct(Setting $setting, Categories $categories, Products $products, Pages $pages)
     {
         $this->Setting = $setting;
         $this->Categories = $categories;
         $this->Products = $products;
+        $this->Pages = $pages;
+        
     }
 
     public function menus(Request $request)
@@ -36,6 +39,8 @@ class MenusController extends Controller
         $result['categories'] = $this->Categories->getterParent($language_id);
         $result['products'] = $this->Products->getter($language_id);
         $result['commonContent'] = $this->Setting->commonContent();
+        // $result['pages'] = $this->Pages->webpages(NULL);
+        // dd($result);
         return view("admin.menus.add", $title)->with('result', $result);
     }
 

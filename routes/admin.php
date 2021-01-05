@@ -20,7 +20,7 @@ Route::group(['middleware' => ['installer']], function () {
     });
 
     Route::get('/home', function () {
-        return redirect('/admin/languages/display');
+        return redirect('/dashboard/{reportBase}');
     });
     Route::group(['namespace' => 'AdminControllers', 'middleware' => 'auth', 'prefix' => 'admin'], function () {
         Route::post('webPagesSettings/changestatus', 'ThemeController@changestatus');

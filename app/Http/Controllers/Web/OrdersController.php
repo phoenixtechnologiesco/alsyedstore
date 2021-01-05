@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Web;
 
-//use Mail;
+use Mail;
 //validator is builtin class in laravel
 use App\Http\Controllers\Web\CartController;
 //for password encryption or hash protected
@@ -121,10 +121,13 @@ class OrdersController extends Controller
                             $address = $default_address;
                         }
                     }
-                    
                 }
             }
-            // dd(session(['shipping_address' => []]));
+
+            if(auth()->guard('customer')->check()){
+                $customer_info = auth()->guard('customer')->user();
+                session(['customer_info' => $customer_info]);
+            }
 
             if (empty(session('shipping_address'))) {
                 session(['shipping_address' => $address]);
@@ -203,18 +206,18 @@ class OrdersController extends Controller
             // $result['settings'] = $settings->unique('id')->keyBy('id');
             $result['settingsContent'] = $this->Setting->commonContent();
             // $result['commonContent']['setting'];
-            // dd($result);
 
             // session(['step' => '0']);
             // session(['checkout_type' => 'delivery']);
                 // OR
             // session(['step' => '1']);
             // session(['checkout_type' => 'pickup']);
-            // session(['pickup_address' => NULL]);
+
 
             // //braintree token
             // $token = $this->generateBraintreeTokenWeb();
-            // session(['braintree_token' => $token]);            
+            // session(['braintree_token' => $token]);
+            // dd($total_price, session('total_price'));
 
             return view("web.checkout", ['title' => $title, 'final_theme' => $final_theme])->with('result', $result);
         }
@@ -261,12 +264,12 @@ class OrdersController extends Controller
                 $billing_data['billing_street'] = $value;
             } else if ($key == 'countries_id') {
                 $billing_data['billing_countries_id'] = $value;
-            } else if ($key == 'zone_id') {
-                $billing_data['billing_zone_id'] = $value;
+            // } else if ($key == 'zone_id') {
+            //     $billing_data['billing_zone_id'] = $value;
             } else if ($key == 'city') {
                 $billing_data['billing_city'] = $value;
-            } else if ($key == 'postcode') {
-                $billing_data['billing_zip'] = $value;
+            // } else if ($key == 'postcode') {
+            //     $billing_data['billing_zip'] = $value;
             } else if ($key == 'delivery_phone') {
                 $billing_data['billing_phone'] = $value;
             }
@@ -378,11 +381,27 @@ class OrdersController extends Controller
     //place_order
     public function place_order(Request $request)
     {
-        $payment_status = $this->order->place_order($request);
+        $cust_address = "";
+        if(auth()->guard('customer')->check()){
+                
+            $all_addresses = $this->shipping->getShippingAddress(array());
+            
+            if (!empty($all_addresses) and count($all_addresses)>0) {
+                foreach($all_addresses as $default_address){
+                    if($default_address->default_address==1){                        
+                        $cust_address = $default_address;
+                    }
+                }
+            }
+        }
+
+        $payment_status = $this->order->place_order($request, $cust_address);
         if ($payment_status == 'success') {
+            session(['shipping_address' => NULL]);
             $message = Lang::get("website.Payment has been processed successfully");
             return redirect('/thankyou');
         } else {
+            session(['shipping_address' => NULL]);
             return redirect()->back()->with('error', Lang::get("website.Error while placing order"));
         }
     }
@@ -395,7 +414,6 @@ class OrdersController extends Controller
         if(!empty(session('banktransfer')) and session('banktransfer') == 'yes'){
             $payments_setting = $this->order->payments_setting_for_directbank();    
             
-
             $bankdetail = array(
                 'account_name' => $payments_setting['account_name']->value,
                 'account_number' => $payments_setting['account_number']->value,
@@ -451,23 +469,23 @@ class OrdersController extends Controller
         $result = array();
         if (!empty(session('shipping_address'))) {
             $countries_id = session('shipping_address')->countries_id;
-            $toPostalCode = session('shipping_address')->postcode;
+            // $toPostalCode = session('shipping_address')->postcode;
             $toCity = session('shipping_address')->city;
-            $toAddress = 'gh';
+            $toAddress = '-';
             $countries = $this->order->getCountries($countries_id);
             $toCountry = $countries[0]->countries_iso_code_2;
-            $zone_id = session('shipping_address')->zone_id;
-            if ($zone_id != -1 and !empty($zone_id)) {
-                $zones = $this->order->getZones($zone_id);
-                $toState = $zones[0]->zone_code;
-            }
+            // $zone_id = session('shipping_address')->zone_id;
+            // if ($zone_id != -1 and !empty($zone_id)) {
+            //     $zones = $this->order->getZones($zone_id);
+            //     $toState = $zones[0]->zone_code;
+            // }
         } else {
             $countries_id = '';
-            $toPostalCode = '';
+            // $toPostalCode = '';
             $toCity = '';
             $toAddress = '';
             $toCountry = '';
-            $zone_id = '';
+            // $zone_id = '';
         }
 
         //product weight

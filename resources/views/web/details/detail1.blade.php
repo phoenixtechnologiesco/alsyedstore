@@ -192,7 +192,6 @@
           
           <div class="price">                     
             <?php
-
             if(!empty($result['detail']['product_data'][0]->discount_price)){
               $discount_price = $result['detail']['product_data'][0]->discount_price * session('currency_value');
             }

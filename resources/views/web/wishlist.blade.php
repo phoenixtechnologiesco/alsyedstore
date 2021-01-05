@@ -10,41 +10,40 @@
 								@lang('website.My Account')
 						</h2>
 						<hr >
-					</div>
+				</div>
 
 				<ul class="list-group">
-						<li class="list-group-item">
-								<a class="nav-link" href="{{ URL::to('/profile')}}">
-										<i class="fas fa-user"></i>
-									@lang('website.Profile')
-								</a>
-						</li>
-						<li class="list-group-item">
-								<a class="nav-link" href="{{ URL::to('/wishlist')}}">
-										<i class="fas fa-heart"></i>
-								 @lang('website.Wishlist')
-								</a>
-						</li>
-						<li class="list-group-item">
-								<a class="nav-link" href="{{ URL::to('/orders')}}">
-										<i class="fas fa-shopping-cart"></i>
-									@lang('website.Orders')
-								</a>
-						</li>
-						<li class="list-group-item">
-								<a class="nav-link" href="{{ URL::to('/shipping-address')}}">
-										<i class="fas fa-map-marker-alt"></i>
-								 @lang('website.Shipping Address')
-								</a>
-						</li>
-						<li class="list-group-item">
-								<a class="nav-link" href="{{ URL::to('/logout')}}">
-										<i class="fas fa-power-off"></i>
-									@lang('website.Logout')
-								</a>
-						</li>
-					</ul>
-
+					<li class="list-group-item">
+							<a class="nav-link" href="{{ URL::to('/profile')}}">
+									<i class="fas fa-user"></i>
+								@lang('website.Profile')
+							</a>
+					</li>
+					<li class="list-group-item">
+							<a class="nav-link" href="{{ URL::to('/wishlist')}}">
+									<i class="fas fa-heart"></i>
+								@lang('website.Wishlist')
+							</a>
+					</li>
+					<li class="list-group-item">
+							<a class="nav-link" href="{{ URL::to('/orders')}}">
+									<i class="fas fa-shopping-cart"></i>
+								@lang('website.Orders')
+							</a>
+					</li>
+					<li class="list-group-item">
+							<a class="nav-link" href="{{ URL::to('/shipping-address')}}">
+									<i class="fas fa-map-marker-alt"></i>
+								@lang('website.Shipping Address')
+							</a>
+					</li>
+					<li class="list-group-item">
+							<a class="nav-link" href="{{ URL::to('/logout')}}">
+									<i class="fas fa-power-off"></i>
+								@lang('website.Logout')
+							</a>
+					</li>
+				</ul>
 			</div>
 			<div class="col-12 col-lg-9 ">
 					<div class="heading">
@@ -83,15 +82,14 @@
 										  }
 										}
 									   ?>
-
-  
+										   
 										  <div class="price"> @lang('website.Total Price'): 
 											@if(!empty($products->discount_price))
 												<span>{{Session::get('symbol_left')}}&nbsp;{{$discount_price+0}}&nbsp;{{Session::get('symbol_right')}}</span>
 												<del> {{Session::get('symbol_left')}}{{$orignal_price+0}}{{Session::get('symbol_right')}}</del>
-												@else
+											@else
 												<span>{{Session::get('symbol_left')}}&nbsp;{{$orignal_price+0}}&nbsp;{{Session::get('symbol_right')}}</span>
-												@endif 
+											@endif 
 										   </div>
 										  <div class="wishlist-discription">
 											<?=stripslashes($products->products_description)?>

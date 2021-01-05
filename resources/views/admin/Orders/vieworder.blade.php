@@ -52,8 +52,10 @@
           {{ trans('labels.CustomerInfo') }}:
           <address>
             <strong>{{ $data['orders_data'][0]->customers_name }}</strong><br>
+            {{ $data['orders_data'][0]->customers_company }} <br>
             {{ $data['orders_data'][0]->customers_street_address }} <br>
-            {{ $data['orders_data'][0]->customers_city }}, {{ $data['orders_data'][0]->customers_state }} {{ $data['orders_data'][0]->customers_postcode }}, {{ $data['orders_data'][0]->customers_country }}<br>
+            {{ $data['orders_data'][0]->customers_city }} 
+            {{ $data['orders_data'][0]->customers_country }}<br>
             <strong>{{ trans('labels.Phone') }}:</strong> {{ $data['orders_data'][0]->customers_telephone }}<br>
             <strong>{{ trans('labels.Email') }}:</strong> {{ $data['orders_data'][0]->email }}
           </address>
@@ -63,12 +65,15 @@
           {{ trans('labels.ShippingInfo') }}
           <address>
             <strong>{{ $data['orders_data'][0]->delivery_name }}</strong><br>
+            <strong>{{ $data['orders_data'][0]->delivery_company }}</strong> <br>
             {{ $data['orders_data'][0]->delivery_street_address }} <br>
-            {{ $data['orders_data'][0]->delivery_city }}, {{ $data['orders_data'][0]->delivery_state }} {{ $data['orders_data'][0]->delivery_postcode }}, {{ $data['orders_data'][0]->delivery_country }}<br>
-
+            {{ $data['orders_data'][0]->delivery_city }}, 
+            {{-- {{ $data['orders_data'][0]->delivery_state }}
+            {{ $data['orders_data'][0]->delivery_postcode }}  --}}
+            {{ $data['orders_data'][0]->delivery_country }}<br>
             <strong>{{ trans('labels.Phone') }}: </strong>{{ $data['orders_data'][0]->delivery_phone }}<br>
-           <strong> {{ trans('labels.ShippingMethod') }}:</strong> {{ $data['orders_data'][0]->shipping_method }} <br>
-           <strong> {{ trans('labels.ShippingCost') }}:</strong> 
+            <strong> {{ trans('labels.ShippingMethod') }}:</strong> {{ $data['orders_data'][0]->shipping_method }} <br>
+            <strong> {{ trans('labels.ShippingCost') }}:</strong> 
            @if(!empty($data['orders_data'][0]->shipping_cost)) 
            @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['orders_data'][0]->shipping_cost }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}} @endif
             @else --- @endif <br>
@@ -79,8 +84,12 @@
          {{ trans('labels.BillingInfo') }}
           <address>
             <strong>{{ $data['orders_data'][0]->billing_name }}</strong><br>
+            <strong>{{ $data['orders_data'][0]->billing_company }}</strong><br>
             {{ $data['orders_data'][0]->billing_street_address }} <br>
-            {{ $data['orders_data'][0]->billing_city }}, {{ $data['orders_data'][0]->billing_state }} {{ $data['orders_data'][0]->billing_postcode }}, {{ $data['orders_data'][0]->billing_country }}<br>
+            {{ $data['orders_data'][0]->billing_city }},
+            {{-- {{ $data['orders_data'][0]->billing_state }}
+            {{ $data['orders_data'][0]->billing_postcode }} --}}
+            {{ $data['orders_data'][0]->billing_country }}<br>
             <strong>{{ trans('labels.Phone') }}: </strong>{{ $data['orders_data'][0]->billing_phone }}<br>
           </address>
         </div>
@@ -194,32 +203,33 @@
                 <th style="width:50%">{{ trans('labels.Subtotal') }}:</th>
                 <td>
                   @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['subtotal'] }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}} @endif
-                  </td>
+                </td>
               </tr>
-              <tr>
+              {{-- <tr>
                 <th>{{ trans('labels.Tax') }}:</th>
                 <td>
                   @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['orders_data'][0]->total_tax }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}} @endif
-                  </td>
-              </tr>
+                </td>
+              </tr> --}}
               <tr>
                 <th>{{ trans('labels.ShippingCost') }}:</th>
                 <td>
                   @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['orders_data'][0]->shipping_cost }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}}@endif
-                  </td>
+                </td>
               </tr>
               @if(!empty($data['orders_data'][0]->coupon_code))
               <tr>
                 <th>{{ trans('labels.DicountCoupon') }}:</th>
                 <td>                  
-                  @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['orders_data'][0]->coupon_amount }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}} @endif</td>
+                  @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['orders_data'][0]->coupon_amount }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}} @endif
+                </td>
               </tr>
               @endif
               <tr>
                 <th>{{ trans('labels.Total') }}:</th>
                 <td>
-                  @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['orders_data'][0]->order_price }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}} @endif</td>
-                  </td>
+                  @if(!empty($result['commonContent']['currency']->symbol_left)) {{$result['commonContent']['currency']->symbol_left}} @endif {{ $data['orders_data'][0]->order_price }} @if(!empty($result['commonContent']['currency']->symbol_right)) {{$result['commonContent']['currency']->symbol_right}} @endif
+                </td>
               </tr>
             </table>
           </div>

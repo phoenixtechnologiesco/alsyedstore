@@ -1513,38 +1513,79 @@ jQuery(document).on('click', '#same_billing_address', function(e){
 });
 
 
-//wishlit
+//wishlist is_liked
 jQuery(document).on('click', '.is_liked', function(e){
+
+	var products_id = jQuery(this).attr('products_id');
+	var selector = jQuery(this);
+	var user_count = jQuery('#wishlist-count').html();
+	// $('.is_liked').hide();
+	// $('.is_liked2').show();
+	// $(".is_liked").text("Remove from Wishlist");
+	// $(".is_liked").text("Add to Wishlist");
+	jQuery.ajax({
+		beforeSend: function (xhr) { // Add this line
+			xhr.setRequestHeader('X-CSRF-Token', jQuery('[name="_csrfToken"]').val());
+		},
+		url: '{{ URL::to("/likeMyProduct")}}',
+		type: "POST",
+		data: {"products_id":products_id,"_token": "{{ csrf_token() }}"},
+
+		success: function (res) {
+			console.log(res);
+			var obj = JSON.parse(res);
+			var message = obj.message;
+
+			if(obj.success==0){
+			}else if(obj.success==2){
+			jQuery(selector).children('span').html(obj.total_likes);
+			jQuery('.total_wishlist').html(obj.total_wishlist);
+			$("#add_to_wishlist").html("<i class='fas fa-heart'></i>Remove from Wishlist");
+			
+			}else if(obj.success==1){
+			jQuery(selector).children('span').html(obj.total_likes);
+			jQuery('.total_wishlist').html(obj.total_wishlist);
+			$("#add_to_wishlist").html("<i class='fas fa-heart'></i>Add to Wishlist");
+			}
+		
+			notificationWishlist(message);
+		},
+	});
+
+});
+
+//wishlist is_liked2
+jQuery(document).on('click', '.is_liked2', function(e){
 
 var products_id = jQuery(this).attr('products_id');
 var selector = jQuery(this);
 var user_count = jQuery('#wishlist-count').html();
+$('.is_liked2').hide();
+$('.is_liked').show();
 jQuery.ajax({
-beforeSend: function (xhr) { // Add this line
-    xhr.setRequestHeader('X-CSRF-Token', jQuery('[name="_csrfToken"]').val());
-},
-  url: '{{ URL::to("/likeMyProduct")}}',
-  type: "POST",
-  data: {"products_id":products_id,"_token": "{{ csrf_token() }}"},
+	beforeSend: function (xhr) { // Add this line
+		xhr.setRequestHeader('X-CSRF-Token', jQuery('[name="_csrfToken"]').val());
+	},
+	url: '{{ URL::to("/likeMyProduct")}}',
+	type: "POST",
+	data: {"products_id":products_id,"_token": "{{ csrf_token() }}"},
 
-  success: function (res) {
-    var obj = JSON.parse(res);
-    var message = obj.message;
+	success: function (res) {
+		var obj = JSON.parse(res);
+		var message = obj.message;
 
-    if(obj.success==0){
-    }else if(obj.success==2){
-      jQuery(selector).children('span').html(obj.total_likes);
-      jQuery('.total_wishlist').html(obj.total_wishlist);
-      
-    }else if(obj.success==1){
-      jQuery(selector).children('span').html(obj.total_likes);
-      jQuery('.total_wishlist').html(obj.total_wishlist);
-    }
-    
-    notificationWishlist(message);
-
-
-  },
+		if(obj.success==0){
+		}else if(obj.success==2){
+		jQuery(selector).children('span').html(obj.total_likes);
+		jQuery('.total_wishlist').html(obj.total_wishlist);
+		
+		}else if(obj.success==1){
+		jQuery(selector).children('span').html(obj.total_likes);
+		jQuery('.total_wishlist').html(obj.total_wishlist);
+		}
+	
+		notificationWishlist(message);
+	},
 });
 
 });

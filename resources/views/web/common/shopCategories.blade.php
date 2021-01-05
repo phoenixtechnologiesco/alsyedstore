@@ -45,19 +45,40 @@
     }
 
     $contents.= '<li class="list-item">
-        <a class="list-link" href='.url('shop?category=').$child->slug.' > '.$dash.'
+        <a class="list-link" href='.url('shop?category=').$child->slug.'>'.$dash.'
             <i class="fas fa-angle-right"></i>'.$child->categories_name.'
         </a>
       </li>';
 
     if(isset($child->childs)){
       $k = $i+1;
-      $contents.= shopChildcat($child->childs,$k,$parent_id);
+      $contents.= shopChildcat2($child->childs,$k,$parent_id);
     }
     elseif($i>0){
       $i=1;
      
+    }else{
+      $i=0;
     }
+
+  }
+  return $contents;
+}
+
+function shopChildcat2($childs, $i, $parent_id){
+
+  $contents = '';
+  foreach($childs as $key => $child){
+    $dash = '';
+    for($j=1; $j<=$i; $j++){
+        $dash .=  '&nbsp;&nbsp;';
+    }
+
+    $contents.= '<li class="list-item">
+        <a class="list-link" href='.url('shop?category=').$child->slug.'>'.$dash.'
+            <i class="fas fa-angle-right"></i>'.$child->categories_name.'
+        </a>  
+      </li>';
 
   }
   return $contents;
@@ -76,7 +97,7 @@
       ->select('manufacturers.manufacturer_name as m_name', 'categories.categories_id', 'categories.categories_slug as slug', 'image_categories.path as path', 'categories_description.categories_name', 'categories.parent_id', 'categories.categories_status',)
       ->groupBy('categories.categories_id')
       ->get();
-   if($items->isNotEmpty()){
+    if($items->isNotEmpty()){
       $childs = array();
 
       foreach($items as $item)

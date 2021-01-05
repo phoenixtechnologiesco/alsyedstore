@@ -134,8 +134,8 @@
                     </td>
                     <td class="align-middle item-total col-12 col-md-1" align="center">
                       <span class="cart_price_{{$products->customers_basket_id}}">
-                        {{Session::get('symbol_left')}}{{$products->final_price * $products->customers_basket_quantity * session('currency_value')}}{{Session::get('symbol_right')}}
-                        </span>
+                        {{Session::get('symbol_left')}}{{$products->final_price*$products->customers_basket_quantity*session('currency_value')}}{{Session::get('symbol_right')}}
+                      </span>
                     </td>
                   </tr>
               </tbody>

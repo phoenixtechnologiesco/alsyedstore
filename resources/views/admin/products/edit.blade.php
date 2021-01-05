@@ -156,6 +156,9 @@
                                                 </div>
                                             </div> --}}
 
+                                            <input id="tax-class_id" name="tax_class_id" type="hidden" value="0">
+
+
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12 col-md-6">

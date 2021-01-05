@@ -125,8 +125,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {{-- <div class="col-xs-12 col-md-6">
+{{-- 
+                                            <div class="col-xs-12 col-md-6">
                                                 <div class="form-group" id="tax-class">
                                                     <label for="name" class="col-sm-2 col-md-3 control-label">{{ trans('labels.TaxClass') }} </label>
                                                     <div class="col-sm-10 col-md-8">
@@ -143,6 +143,8 @@
                                                     </div>
                                                 </div>
                                             </div> --}}
+
+                                            <input id="tax-class_id" name="tax_class_id" type="hidden" value="0">
                                         </div>
 
                                         <div class="row">

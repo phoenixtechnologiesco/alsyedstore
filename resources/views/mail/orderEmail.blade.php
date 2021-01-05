@@ -25,24 +25,32 @@
     <div style="display: inline-block; width:32%"> <strong>{{ trans('labels.CustomerInfo') }}:</strong>
       <address>
       <span style="text-transform: capitalize;">{{ $ordersData['orders_data'][0]->customers_name }}</span><br>
-      {{ $ordersData['orders_data'][0]->customers_street_address }} <br>
-        {{ $ordersData['orders_data'][0]->customers_city }}, {{ $ordersData['orders_data'][0]->customers_state }} {{ $ordersData['orders_data'][0]->customers_postcode }}, {{ $ordersData['orders_data'][0]->customers_country }}<br>
-        {{ trans('labels.Phone') }}: {{ $ordersData['orders_data'][0]->customers_telephone }}<br>
-        {{ trans('labels.Email') }}: {{ $ordersData['orders_data'][0]->email }}
+      {{ $ordersData['orders_data'][0]->customers_company }}<br>
+      {{ $ordersData['orders_data'][0]->customers_street_address }}<br>
+      {{ $ordersData['orders_data'][0]->customers_city }}, 
+      {{ $ordersData['orders_data'][0]->customers_country }}<br>
+      {{ trans('labels.Phone') }}: {{ $ordersData['orders_data'][0]->customers_telephone }}<br>
+      {{ trans('labels.Email') }}: {{ $ordersData['orders_data'][0]->email }}
       </address>
     </div>
     <div style="display: inline-block; width:32%"> <strong>{{ trans('labels.ShippingInfo') }}:</strong>
       <address>
-      <span style="text-transform: capitalize;">{{ $ordersData['orders_data'][0]->delivery_name }}</span><br>
-      {{ $ordersData['orders_data'][0]->delivery_street_address }} <br>
-      {{ $ordersData['orders_data'][0]->delivery_city }}, {{ $ordersData['orders_data'][0]->delivery_state }} {{ $ordersData['orders_data'][0]->delivery_postcode }}, {{ $ordersData['orders_data'][0]->delivery_country }}
+        <span style="text-transform: capitalize;">{{ $ordersData['orders_data'][0]->delivery_name }}</span><br>
+        {{ $ordersData['orders_data'][0]->delivery_company }} <br>
+        {{ $ordersData['orders_data'][0]->delivery_street_address }} <br>
+        {{ $ordersData['orders_data'][0]->delivery_city }}, 
+        {{ $ordersData['orders_data'][0]->delivery_country }}
+        <strong>{{ trans('labels.Phone') }}: </strong>{{ $ordersData['orders_data'][0]->delivery_phone }}<br>
       </address>
     </div>
     <div style="display: inline-block; width:32%"> <strong>{{ trans('labels.BillingInfo') }}:</strong>
       <address>
-      <span style="text-transform: capitalize;">{{ $ordersData['orders_data'][0]->billing_name }}</span><br>
-       {{ $ordersData['orders_data'][0]->billing_street_address }} <br>
-       {{ $ordersData['orders_data'][0]->billing_city }}, {{ $ordersData['orders_data'][0]->billing_state }} {{ $ordersData['orders_data'][0]->billing_postcode }}, {{ $ordersData['orders_data'][0]->billing_country }}
+        <span style="text-transform: capitalize;">{{ $ordersData['orders_data'][0]->billing_name }}</span><br>
+        {{ $ordersData['orders_data'][0]->billing_company }} <br>
+        {{ $ordersData['orders_data'][0]->billing_street_address }} <br>
+        {{ $ordersData['orders_data'][0]->billing_city }}, 
+        {{ $ordersData['orders_data'][0]->billing_country }}
+        <strong>{{ trans('labels.Phone') }}: </strong>{{ $ordersData['orders_data'][0]->billing_phone }}<br>
       </address>
     </div>
     
@@ -55,7 +63,7 @@
     <thead>
       <tr>
         <th align="center">{{ trans('labels.Qty') }}</th>
-        <th align="center" >{{ trans('labels.Image') }}</th>
+        {{-- <th align="center" >{{ trans('labels.Image') }}</th> --}}
         <th align="center">{{ trans('labels.ProductName') }}</th>
         <th align="center">{{ trans('labels.AdditionalAttributes') }}</th>
         <th align="center">{{ trans('labels.Price') }}</th>
@@ -66,7 +74,7 @@
       <tr @if($key%2==0) style="background-color: #f9f9f9;" @endif>
       
         @if($key%2==0) <td align="center" style="border-top: 1px solid #f4f4f4; padding: 8px;"> @else <td align="center" style="padding: 8px;"> @endif {{  $products->products_quantity }}</td>
-        @if($key%2==0) <td align="center" style="border-top: 1px solid #f4f4f4; padding: 8px;"> @else <td align="center" style="padding: 8px;"> @endif<img src="{{ asset('').$products->image }}" width="60px"> </td>
+        {{-- @if($key%2==0) <td align="center" style="border-top: 1px solid #f4f4f4; padding: 8px;"> @else <td align="center" style="padding: 8px;"> @endif<img src="{{ asset('').$products->image }}" width="60px"> </td> --}}
         @if($key%2==0) <td align="center" style="border-top: 1px solid #f4f4f4; padding: 8px;"> @else <td align="center" style="padding: 8px;"> @endif  {{  $products->products_name }}<br></td>
         @if($key%2==0) <td align="center" style="border-top: 1px solid #f4f4f4; padding: 8px;"> @else <td align="center" style="padding: 8px;"> @endif
             @foreach($products->attribute as $attributes)
@@ -79,7 +87,7 @@
         @if($key%2==0) <td align="center" style="border-top: 1px solid #f4f4f4; padding: 8px;"> @else <td align="center" style="padding: 8px;"> @endif{{ $ordersData['orders_data'][0]->currency }}{{ $products->final_price }}</td>
       </tr>
       @endforeach
-      
+
     </tbody>
   </table>
   
@@ -141,10 +149,6 @@
           <tr>
             <th style="width:50%;padding: 10px 0; border-top: 1px solid #f4f4f4;" align="left">{{ trans('labels.Subtotal') }}:</th>
             <td align="right" style="border-top: 1px solid #f4f4f4;">{{ $ordersData['orders_data'][0]->currency }}{{ $ordersData['subtotal'] }}</td>
-          </tr>
-          <tr>
-            <th style="width:50%;padding: 10px 0; border-top: 1px solid #f4f4f4;" align="left">{{ trans('labels.Tax') }}:</th>
-            <td align="right" style="border-top: 1px solid #f4f4f4;">{{ $ordersData['orders_data'][0]->currency }}{{ $ordersData['orders_data'][0]->total_tax }}</td>
           </tr>
           <tr>
             <th style="width:50%;padding: 10px 0; border-top: 1px solid #f4f4f4;" align="left">{{ trans('labels.ShippingCost') }}:</th>

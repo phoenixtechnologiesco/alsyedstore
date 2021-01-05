@@ -535,9 +535,16 @@ class Setting extends Model
     {
         // dd(Auth::guard('customer')->user());
         $result = array();
-        $roles = DB::table('manage_role')
-                   ->where('user_types_id', Auth::guard('customer')->user()->attributes['role_id'])
-                   ->first();
+        if(Auth::user() != NULL){
+            $roles = DB::table('manage_role')
+            ->where('user_types_id', Auth::user()->attributes['role_id'])
+            ->first();
+        }
+        else{
+            $roles = DB::table('manage_role')
+            ->where('user_types_id', Auth::guard('customer')->user()->attributes['role_id'])
+            ->first();
+        }
 
         $result['roles'] = $roles;        
 

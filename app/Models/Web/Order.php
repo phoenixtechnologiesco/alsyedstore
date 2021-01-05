@@ -18,7 +18,7 @@ class Order extends Model
 {
 
     //place_order
-    public function place_order($request)
+    public function place_order($request, $cust_address)
     {
         $cart = new Cart();
         $result = array();
@@ -55,7 +55,7 @@ class Order extends Model
                     ->insertGetId([
                         'role_id' => 2,
                         'email' => $email = session('shipping_address')->email,
-                        'password' => Hash::make('123456dfdfdf'),
+                        'password' => Hash::make('12345678'),
                         'first_name' => session('shipping_address')->firstname,
                         'last_name' => session('shipping_address')->lastname,
                         'phone' => session('billing_address')->billing_phone,
@@ -65,30 +65,50 @@ class Order extends Model
                 $customers_id = $check->id;
                 $email = $check->email;
                 $customers_telephone = $check->phone;
+                $customers_firstname = $cust_address->firstname;
+                $customers_lastname = $cust_address->lastname;
+                $customers_company = $cust_address->company;
+                $customers_street = $cust_address->street;
+                $customers_suburb = $cust_address->suburb;
+                $customers_city = $cust_address->city;
+                $customers_country = $cust_address->country_name;
                 session(['customers_id' => $customers_id, 'customers_telephone' => $customers_telephone]);
             }
         } else {
             $customers_id = auth()->guard('customer')->user()->id;
             $email = auth()->guard('customer')->user()->email;
-            $customers_telephone = auth()->guard('customer')->user()->phone;
+            if(auth()->guard('customer')->check()){
+                $customers_telephone = auth()->guard('customer')->user()->phone;
+                session(['customers_telephone' => $customers_telephone]);
+            }
+            $customers_firstname = $cust_address->firstname;
+            $customers_lastname = $cust_address->lastname;
+            $customers_company = $cust_address->company;
+            $customers_street = $cust_address->street;
+            $customers_suburb = $cust_address->suburb;
+            $customers_city = $cust_address->city;
+            $customers_country = $cust_address->country_name;
         }
-        $delivery_company = session('shipping_address')->company;
+        $delivery_company;
+        if (!empty(session('shipping_address')->company)) {
+            $delivery_company = session('shipping_address')->company;
+        }
         $delivery_firstname = session('shipping_address')->firstname;
 
         $delivery_lastname = session('shipping_address')->lastname;
         $delivery_street_address = session('shipping_address')->street;
         $delivery_suburb = '';
         $delivery_city = session('shipping_address')->city;
-        $delivery_postcode = session('shipping_address')->postcode;
+        // $delivery_postcode = session('shipping_address')->postcode;
         $delivery_phone = session('shipping_address')->delivery_phone;
 
-        $delivery = DB::table('zones')->where('zone_id', '=', session('shipping_address')->zone_id)->get();
+        // $delivery = DB::table('zones')->where('zone_id', '=', session('shipping_address')->zone_id)->get();
 
-        if (count($delivery) > 0) {
-            $delivery_state = $delivery[0]->zone_code;
-        } else {
-            $delivery_state = 'other';
-        }
+        // if (count($delivery) > 0) {
+        //     $delivery_state = $delivery[0]->zone_code;
+        // } else {
+        //     $delivery_state = 'other';
+        // }
 
         $country = DB::table('countries')->where('countries_id', '=', session('shipping_address')->countries_id)->get();
 
@@ -99,22 +119,24 @@ class Order extends Model
         $billing_street_address = session('billing_address')->billing_street;
         $billing_suburb = '';
         $billing_city = session('billing_address')->billing_city;
-        $billing_postcode = session('billing_address')->billing_zip;
+        // $billing_postcode = session('billing_address')->billing_zip;
         $billing_phone = session('billing_address')->billing_phone;
 
-        if (!empty(session('billing_company')->company)) {
-            $billing_company = session('billing_address')->company;
+        $billing_company = "";
+        if (!empty(session('billing_address')->billing_company)) {
+            $billing_company = session('billing_address')->billing_company;
         }
 
-        $billing = DB::table('zones')->where('zone_id', '=', session('billing_address')->billing_zone_id)->get();
+        // $billing = DB::table('zones')->where('zone_id', '=', session('billing_address')->billing_zone_id)->get();
 
-        if (count($billing) > 0) {
-            $billing_state = $billing[0]->zone_code;
-        } else {
-            $billing_state = 'other';
-        }
+        // if (count($billing) > 0) {
+        //     $billing_state = $billing[0]->zone_code;
+        // } else {
+        //     $billing_state = 'other';
+        // }
 
-        $country = DB::table('countries')->where('countries_id', '=', session('billing_address')->billing_countries_id)->get();
+        // $country = DB::table('countries')->where('countries_id', '=', session('billing_address')->billing_countries_id)->get();
+        $country = DB::table('countries')->where('countries_id', '=', '162')->get();
 
         $billing_country = $country[0]->countries_name;
 
@@ -146,12 +168,9 @@ class Order extends Model
         $coupon_discount = number_format((float) session('coupon_discount'), 2, '.', '');
         $order_price = (session('products_price') + $tax_rate + $shipping_price) - $coupon_discount;
 
-        // dd(session('shipping_detail'));
-
         $shipping_cost = session('shipping_detail')->shipping_price;
         // $shipping_method = session('shipping_detail')->shipping_method;
         $shipping_method = session('shipping_detail')->mehtod_name;
-        //dd($shipping_method);
         $orders_status = '1';
         //$orders_date_finished                =   $request->orders_date_finished;
 
@@ -361,32 +380,35 @@ class Order extends Model
 
             $orders_id = DB::table('orders')->insertGetId(
                 ['customers_id' => $customers_id,
-                    'customers_name' => $delivery_firstname . ' ' . $delivery_lastname,
-                    'customers_street_address' => $delivery_street_address,
-                    'customers_suburb' => $delivery_suburb,
-                    'customers_city' => $delivery_city,
-                    'customers_postcode' => $delivery_postcode,
-                    'customers_state' => $delivery_state,
-                    'customers_country' => $delivery_country,
+                    'customers_name' => $customers_firstname . ' ' . $customers_lastname,
+                    'customers_company' => $customers_company,
+                    'customers_street_address' => $customers_street,
+                    'customers_suburb' => $customers_suburb,
+                    'customers_city' => $customers_city,
+                    // 'customers_postcode' => $customers_postcode,
+                    // 'customers_state' => $customers_state,
+                    'customers_country' => $customers_country,
                     'customers_telephone' => $customers_telephone,
                     'email' => $email,
                     // 'customers_address_format_id' => $delivery_address_format_id,
 
                     'delivery_name' => $delivery_firstname . ' ' . $delivery_lastname,
+                    'delivery_company' => $delivery_company,
                     'delivery_street_address' => $delivery_street_address,
                     'delivery_suburb' => $delivery_suburb,
                     'delivery_city' => $delivery_city,
-                    'delivery_postcode' => $delivery_postcode,
-                    'delivery_state' => $delivery_state,
+                    // 'delivery_postcode' => $delivery_postcode,
+                    // 'delivery_state' => $delivery_state,
                     'delivery_country' => $delivery_country,
                     // 'delivery_address_format_id' => $delivery_address_format_id,
 
                     'billing_name' => $billing_firstname . ' ' . $billing_lastname,
+                    'billing_company' => $billing_company,
                     'billing_street_address' => $billing_street_address,
                     'billing_suburb' => $billing_suburb,
                     'billing_city' => $billing_city,
-                    'billing_postcode' => $billing_postcode,
-                    'billing_state' => $billing_state,
+                    // 'billing_postcode' => $billing_postcode,
+                    // 'billing_state' => $billing_state,
                     'billing_country' => $billing_country,
                     //'billing_address_format_id' => $billing_address_format_id,
 

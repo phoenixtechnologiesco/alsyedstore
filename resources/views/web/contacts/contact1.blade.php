@@ -77,7 +77,7 @@
                   function initMap() {
 
                     // The location of Uluru
-                    var uluru = {lat: {{$result['commonContent']['settings']['latitude']}}, lng: {{$result['commonContent']['settings']['longitude']}} };
+                    var uluru ={lat: {{ $result['commonContent']['settings']['latitude'] }}, lng: {{$result['commonContent']['settings']['longitude']}} };
                     // The map, centered at Uluru
                     var map = new google.maps.Map(
                         document.getElementById('map'), {zoom: 4, center: uluru});
@@ -92,23 +92,20 @@
                 async defer></script>
                  @endif
                  @endif
-                <p class="info">
-                    @lang('website.Contact us text')
-                </p>
+                // <p class="info">
+                //     @lang('website.Contact us text')
+                // </p>
           </div> 
           <div class="col-12 col-lg-3">
              
               <div class="">
-                  <ul class="contact-info pl-0 mb-0"  >
-                      <li> <i class="fas fa-mobile-alt"></i><span><a href="tel:{{$result['commonContent']['setting'][11]->value}}">{{$result['commonContent']['setting'][11]->value}}</a></span> </li>
-                      <li> <i class="fas fa-map-marker"></i><a style="
-    cursor: default;
-" href="javascript:void(0)">@lang('website.Ecommerce')<br>@lang('website.Demo Store 3654123')</a></span> </li>
-                      <li> <i class="fas fa-envelope"></i><span> <a href="mailto:{{$result['commonContent']['setting'][3]->value}}">{{$result['commonContent']['setting'][3]->value}}</a> </span> </li>
-                      <li> <i class="fas fa-tty"></i><span> <a href="tel:{{$result['commonContent']['setting'][11]->value}} dir="ltr">{{$result['commonContent']['setting'][11]->value}}</a> </span> </li>
-                 
-                    </ul>         
-                </div>
+                <ul class="contact-info pl-0 mb-0"  >
+                  <li> <i class="fas fa-mobile-alt"></i><span><a href="tel:{{$result['commonContent']['setting'][11]->value}}">{{$result['commonContent']['setting'][11]->value}}</a></span> </li>
+                  <li> <i class="fas fa-map-marker"></i><a style="cursor: default;" href="javascript:void(0)">@lang('website.Ecommerce')<br>{{-- @lang('website.DemoStore3654123') --}}</a></span> </li>
+                  <li> <i class="fas fa-envelope"></i><span> <a href="mailto:{{$result['commonContent']['setting'][3]->value}}">{{$result['commonContent']['setting'][3]->value}}</a> </span> </li>
+                  <li> <i class="fas fa-tty"></i><span> <a href="tel:{{$result['commonContent']['setting'][11]->value}}" dir='ltr'>{{$result['commonContent']['setting'][11]->value}}</a> </span> </li>
+                </ul>         
+              </div>
         
           </div>
         

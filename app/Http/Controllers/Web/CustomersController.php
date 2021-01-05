@@ -210,6 +210,16 @@ class CustomersController extends Controller
     public function likeMyProduct(Request $request)
     {
         $cartResponse = $this->customer->likeMyProduct($request);
+        if(session('wishlist-button') == 'add'){
+            session(['wishlist-button' => 'remove']);
+        }
+        elseif(session('wishlist-button') == 'remove'){
+            session(['wishlist-button' => 'add']);
+        }
+        else{
+            session(['wishlist-button' => 'add']);
+        }
+        
         return $cartResponse;
     }
 
@@ -231,6 +241,8 @@ class CustomersController extends Controller
         $title = array('pageTitle' => Lang::get("website.Wishlist"));
         $final_theme = $this->theme->theme();
         $result = $this->customer->wishlist($request);
+        // $data = array('page_number' => '0', 'type' => $type, 'products_id' => $products[0]->products_id, 'limit' => $limit, 'min_price' => $min_price, 'max_price' => $max_price);
+        // $detail = $this->products->products($data);
         return view("web.wishlist", ['title' => $title, 'final_theme' => $final_theme])->with('result', $result);
     }
 

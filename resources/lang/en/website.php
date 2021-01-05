@@ -816,6 +816,7 @@ return [
 	'Reviews'=>'Reviews',
 	'Product Added Successfully Thanks.Continue Shopping'=>'Product Added Successfully Thanks.Continue Shopping',
 	'Add to Wishlist'=>'Add to Wishlist',
+	'Remove from Wishlist'=>'Remove from Wishlist',
 	'Add to Compare'=>'Add to Compare',
 	'Descriptions'=>'Descriptions',
 	'Customer Reviews'=>'Customer Reviews',
@@ -830,7 +831,7 @@ return [
 	'Related Products Text'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi venenatis felis tempus feugiat maximus.',
 	'Best Sellers'=>'Best Sellers',
 	'APPLY'=>'APPLY',
-	'Demo Store 3654123'=>'Demo Store 3654123',
+	'Demo Store 3654123'=>'Al-Syed Store',
 	'Contact us text'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit,
 	sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 	Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

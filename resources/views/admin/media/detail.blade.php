@@ -16,10 +16,6 @@
     <!-- Main content -->
     <section class="content">
         <!-- Info boxes -->
-
-        <!-- /.row -->
-        <!-- /.row -->
-
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -47,17 +43,16 @@
                             </div>
                         </div>    
                         
-                            @if(isset($result['images']))
-                                @foreach($result['images'] as $key=>$image)
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        
-                                        <div class="caption">
-                                            <h2>{{$image->image_type}}  ({{$image->height}} X {{$image->width}})</h2>
-                                        </div>
-                                      <div class="thumbnail">
-                                      <img src="{{asset($image->path)}}" alt="{{$image->height}} X {{$image->width}}">
-                                      <div class="col-md-6 col-md-offset-3">
+                        @if(isset($result['images']))
+                            @foreach($result['images'] as $key=>$image)
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="caption">
+                                        <h2>{{$image->image_type}}  ({{$image->height}} X {{$image->width}})</h2>
+                                    </div>
+                                    <div class="thumbnail">
+                                        <img src="{{asset($image->path)}}" alt="{{$image->height}} X {{$image->width}}">
+                                        <div class="col-md-6 col-md-offset-3">
                                             <div class="caption">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">@lang('labels.Path')</span>
@@ -81,27 +76,22 @@
                                             </div>
                                             {!! Form::close() !!}
                                             @endif
-
                                         </div>
-                                      </div>
                                     </div>
-                                  </div>
-                                @endforeach
-                            @endif
-
+                                </div>
+                            </div>
+                            @endforeach
+                        @endif
                     </div>
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
             </div>
             <p id="demo"></p>
-
             <!-- /.col -->
         </div>
         <!-- /.row -->
-<script>
 
-</script>
         <!-- Main row -->
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">

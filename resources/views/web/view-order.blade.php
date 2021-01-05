@@ -134,9 +134,11 @@
                       </tr>
                       <tr class="d-flex">
                           <td  class="address col-12 col-md-12">
+                          <strong>Company:</strong> {{$result['orders'][0]->delivery_company}},<br>
+                          <strong>Phone:</strong> {{$result['orders'][0]->delivery_phone}},<br>
                           <strong>City:</strong> {{$result['orders'][0]->delivery_city}},<br>
-                          <strong>State:</strong> {{$result['orders'][0]->delivery_state}},<br>
-                          <strong>Postcode:</strong>{{$result['orders'][0]->delivery_postcode}},<br>
+                          {{-- <strong>State:</strong> {{$result['orders'][0]->delivery_state}},<br>
+                          <strong>Postcode:</strong>{{$result['orders'][0]->delivery_postcode}},<br> --}}
                           <strong>Country:</strong>{{$result['orders'][0]->delivery_country}},<br>
                           <strong>Address:</strong>{{$result['orders'][0]->delivery_street_address}},<br>
                           </td>
@@ -166,9 +168,11 @@
                       </tr>
                       <tr  class="d-flex">
                           <td class="address col-12">
+                            <strong>Company:</strong> {{$result['orders'][0]->billing_company}},<br>
+                            <strong>Phone:</strong> {{$result['orders'][0]->billing_phone}},<br>
                             <strong>City:</strong> {{$result['orders'][0]->billing_city}},<br>
-                            <strong>State:</strong> {{$result['orders'][0]->billing_state}},<br>
-                            <strong>Postcode:</strong>{{$result['orders'][0]->billing_postcode}},<br>
+                            {{-- <strong>State:</strong> {{$result['orders'][0]->billing_state}},<br>
+                            <strong>Postcode:</strong>{{$result['orders'][0]->billing_postcode}},<br> --}}
                             <strong>Country:</strong>{{$result['orders'][0]->billing_country}},<br>
                             <strong>Address:</strong>{{$result['orders'][0]->billing_street_address}},<br>
                           </td>
