@@ -238,6 +238,10 @@ class CartController extends Controller
     //updateCart
     public function updateCart(Request $request)
     {
+        $newcart = array();
+        $newquantity = array();
+        $newcart2 = array();
+        $newquantity2 = array();
 
         if (empty(session('customers_id'))) {
             $customers_id = '';
@@ -245,8 +249,35 @@ class CartController extends Controller
             $customers_id = session('customers_id');
         }
         $session_id = Session::getId();
-        foreach ($request->cart as $key => $customers_basket_id) {
-            $this->cart->updateRecord($customers_basket_id, $customers_id, $session_id, $request->quantity[$key]);
+        if(!empty($request->ajax_cart)){
+            // print_r($request->ajax_quantity);
+            // die();
+
+            foreach ($request->ajax_cart as $key => $customers_basket_id){
+                // print_r($customers_basket_id['value']);
+                $newcart[] = $customers_basket_id['value'];
+                // $this->cart->updateRecord($customers_basket_id, $customers_id, $session_id, $request->ajax_quantity[$key]);
+            }
+            foreach($request->ajax_quantity as $key => $quantity_a){
+                $newquantity[] = $quantity_a['value'];
+            }
+            foreach($newcart as $key => $cust_basket_id){
+                $newcart2[] = $cust_basket_id;
+                $this->cart->updateRecord($cust_basket_id, $customers_id, $session_id, $newquantity[$key]);
+            }
+            // foreach($newquantity as $cust_newquantity){
+            //     $newquantity2[] = $cust_newquantity;
+            //     // $this->cart->updateRecord($cust_basket_id, $customers_id, $session_id, $request->ajax_quantity[$key]);
+            // }
+
+            // print_r($newquantity);
+            // die();
+
+        }
+        else{
+            foreach ($request->cart as $key => $customers_basket_id) {
+                $this->cart->updateRecord($customers_basket_id, $customers_id, $session_id, $request->quantity[$key]);
+            }
         }
 
         $message = Lang::get("website.Cart has been updated successfully");

@@ -111,7 +111,7 @@ jQuery(document).ready(function() {
                         <input type="text"  required class="form-control field-validate" id="firstname" name="firstname" value="@if(!empty(session('shipping_address'))){{session('shipping_address')->firstname}}@endif" aria-describedby="NameHelp1" placeholder="Enter Your Name">
                         <span style="color:red;" class="help-block error-content" hidden>@lang('website.Please enter your first name')</span>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" hidden>
                         <label for=""> @lang('website.Last Name')</label>
                         <input type="text" required class="form-control field-validate" id="lastname" name="lastname" value="@if(!empty(session('shipping_address'))){{session('shipping_address')->lastname}}@endif" aria-describedby="NameHelp1" placeholder="Enter Your Last Name">
                         <span style="color:red;" class="help-block error-content" hidden>@lang('website.Please enter your last name')</span>
@@ -125,8 +125,8 @@ jQuery(document).ready(function() {
                       <?php } ?>
                       <div class="form-group">
                         <label for=""> @lang('website.Company')</label>
-                        <input type="text" required class="form-control field-validate" id="company" aria-describedby="companyHelp" placeholder="Enter Your Company Name" name="company" value="@if(!empty(session('shipping_address'))) {{session('shipping_address')->company}}@endif">
-                        <span style="color:red;" class="help-block error-content" hidden>@lang('website.Please enter your company name')</span>
+                        <input type="text" required class="form-control field-validate" id="company" aria-describedby="companyHelp" placeholder="@lang('website.Please enter your shop name')" name="company" value="@if(!empty(session('shipping_address'))) {{session('shipping_address')->company}}@endif">
+                        <span style="color:red;" class="help-block error-content" hidden>@lang('website.Please enter your shop name')</span>
                       </div>
                       <div class="form-group">
                         <label for=""> @lang('website.Address')</label>
@@ -195,7 +195,7 @@ jQuery(document).ready(function() {
                             <input type="text" class="form-control same_address" @if(!empty(session('billing_address'))) @if(session('billing_address')->same_billing_address==1) readonly @endif @else readonly @endif  id="billing_firstname" name="billing_firstname" value="@if(!empty(session('billing_address'))){{session('billing_address')->billing_firstname}}@endif" aria-describedby="NameHelp1" placeholder="Enter Your Name">
                             <span class="help-block error-content" hidden>@lang('website.Please enter your first name')</span>
                           </div>
-                          <div class="form-group">
+                          <div class="form-group" hidden>
                             <label for=""> @lang('website.Last Name')</label>
                             <input type="text" class="form-control same_address" id="exampleInputName2" aria-describedby="NameHelp2" placeholder="Enter Your Name" @if(!empty(session('billing_address'))>0) @if(session('billing_address')->same_billing_address==1) readonly @endif @else readonly @endif  id="billing_lastname" name="billing_lastname" value="@if(!empty(session('billing_address'))>0){{session('billing_address')->billing_lastname}}@endif">
                             <span class="help-block error-content" hidden>@lang('website.Please enter your last name')</span>
@@ -203,8 +203,8 @@ jQuery(document).ready(function() {
 
                           <div class="form-group">
                             <label for=""> @lang('website.Company')</label>
-                            <input type="text" class="form-control same_address" @if(!empty(session('billing_address'))) @if(session('billing_address')->same_billing_address==1) readonly @endif @else readonly @endif  id="billing_company" name="billing_company" value="@if(!empty(session('billing_address'))){{session('billing_address')->billing_company}}@endif" id="exampleInputCompany1" aria-describedby="companyHelp" placeholder="Enter Your Company Name">
-                            <span class="help-block error-content" hidden>@lang('website.Please enter your company name')</span>
+                            <input type="text" class="form-control same_address" @if(!empty(session('billing_address'))) @if(session('billing_address')->same_billing_address==1) readonly @endif @else readonly @endif  id="billing_company" name="billing_company" value="@if(!empty(session('billing_address'))){{session('billing_address')->billing_company}}@endif" id="exampleInputCompany1" aria-describedby="companyHelp" placeholder="@lang('website.Please enter your shop name')">
+                            <span class="help-block error-content" hidden>@lang('website.Please enter your shop name')</span>
                           </div>
 
                           <div class="form-group">
@@ -548,37 +548,66 @@ jQuery(document).ready(function() {
                               <div class="form-group" style="width:100%; padding:0;">
                                 {{-- <label for="exampleFormControlTextarea1" style="width:100%; margin-bottom:30px;">@lang('website.Please select a prefered payment method to use on this order')</label> --}}
                                 <br>
-                                <div>
-                                  @foreach($result['payment_methods'] as $payment_methods)
+                                {{-- <div id="cod_method">
+                                  @if($result['payment_methods'][0]['active']==1)
+                                    <input id="payment_currency" type="hidden" onClick="paymentMethods();" name="payment_currency" value="{{$result['payment_methods'][0]['payment_currency']}}">
+
+                                    <input id="{{$result['payment_methods'][0]['payment_method']}}_public_key" type="hidden" name="public_key" value="{{$result['payment_methods'][0]['public_key']}}">
+                                    <input id="{{$result['payment_methods'][0]['payment_method']}}_environment" type="hidden" name="{{$result['payment_methods'][0]['payment_method']}}_environment" value="{{$result['payment_methods'][0]['environment']}}">
+                                  
+                                    <div class="form-check form-check-inline">
+                                      <input disabled onClick="paymentMethods();" id="{{$result['payment_methods'][0]['payment_method']}}_label" type="checkbox" name="payment_method" class="form-check-input payment_method" value="{{$result['payment_methods'][0]['payment_method']}}" @if(!empty(session('payment_method'))) @if(session('payment_method')==$result['payment_methods'][0]['payment_method']) checked @endif @endif>
+                                      <label class="form-check-label" for="{{$result['payment_methods'][0]['payment_method']}}_label">
+                                        @if(file_exists( 'web/images/miscellaneous/'.$result['payment_methods'][0]['payment_method'].'.png'))
+                                          <img width="100px" src="{{asset('web/images/miscellaneous/').'/'.$result['payment_methods'][0]['payment_method'].'.png'}}" alt="{{$result['payment_methods'][0]['name']}}">
+                                        @else
+                                        {{$result['payment_methods'][0]['name']}}
+                                        @endif
+                                      </label>
+                                    </div>
+                                  @endif
+                                </div> --}}
+                                  <input id="payment_currency" type="hidden" onClick="paymentMethods();" name="payment_currency" value="PKR">
+
+                                  <input id="cod-cop_public_key" type="hidden" name="public_key" value="">
+                                  <input id="cod-cop_environment" type="hidden" name="cop_environment" value="Live">
+                                
+                                  <div class="form-check form-check-inline">
+                                    <input checked disabled  onClick="paymentMethods();" id="cod-cop_value" type="checkbox" name="payment_method" class="form-check-input payment_method"  value="@if(session('checkout_type') == 'pickup'){{"cash_on_pickup"}}@else{{"cash_on_delivery"}}@endif" @if(!empty(session('payment_method')))  checked @endif>
+                                    <label class="form-check-label" for="cod-cop_value" id=cod-cop_label>
+                                      {{-- @if(file_exists( 'web/images/miscellaneous/'.'cash_on_pickup.png'))
+                                        <img width="100px" src="{{asset('web/images/miscellaneous/').'/'.'cash_on_pickup.png'}}" alt="Cash on Pickup">
+                                      @else --}}
+                                      @if(session('checkout_type') == 'pickup') Cash on Pickup @elseif(session('checkout_type') == 'delivery')  Cash on Delivery @endif
+                                      {{-- @endif --}}
+                                    </label>
+                                  </div>
+                                  {{-- @foreach($result['payment_methods'] as $payment_methods)
                                 
                                     @if($payment_methods['active']==1)
                                         <input id="payment_currency" type="hidden" onClick="paymentMethods();" name="payment_currency" value="{{$payment_methods['payment_currency']}}">
 
+                                        <input id="{{$payment_methods['payment_method']}}_public_key" type="hidden" name="public_key" value="{{$payment_methods['public_key']}}">
+                                        <input id="{{$payment_methods['payment_method']}}_environment" type="hidden" name="{{$payment_methods['payment_method']}}_environment" value="{{$payment_methods['environment']}}">
                                       
-                                          <input id="{{$payment_methods['payment_method']}}_public_key" type="hidden" name="public_key" value="{{$payment_methods['public_key']}}">
-                                          <input id="{{$payment_methods['payment_method']}}_environment" type="hidden" name="{{$payment_methods['payment_method']}}_environment" value="{{$payment_methods['environment']}}">
-                                        
-                                          
-                                          <div class="form-check form-check-inline">
-                                            <input checked disabled onClick="paymentMethods();" id="{{$payment_methods['payment_method']}}_label" type="checkbox" name="payment_method" class="form-check-input payment_method" value="{{$payment_methods['payment_method']}}" @if(!empty(session('payment_method'))) @if(session('payment_method')==$payment_methods['payment_method']) checked @endif @endif>
-                                            <label class="form-check-label" for="{{$payment_methods['payment_method']}}_label">
-                                              @if(file_exists( 'web/images/miscellaneous/'.$payment_methods['payment_method'].'.png'))
-                                                <img width="100px" src="{{asset('web/images/miscellaneous/').'/'.$payment_methods['payment_method'].'.png'}}" alt="{{$payment_methods['name']}}">
-                                              @else
-                                              {{$payment_methods['name']}}
-                                              @endif
-                                            </label>
-                                          </div>
-                                    @endif
+                                        <div class="form-check form-check-inline">
+                                          <input disabled onClick="paymentMethods();" id="{{$payment_methods['payment_method']}}_label" type="checkbox" name="payment_method" class="form-check-input payment_method" value="{{$payment_methods['payment_method']}}" @if(!empty(session('payment_method'))) @if(session('payment_method')==$payment_methods['payment_method']) checked @endif @endif>
+                                          <label class="form-check-label" for="{{$payment_methods['payment_method']}}_label">
+                                            @if(file_exists( 'web/images/miscellaneous/'.$payment_methods['payment_method'].'.png'))
+                                              <img width="100px" src="{{asset('web/images/miscellaneous/').'/'.$payment_methods['payment_method'].'.png'}}" alt="{{$payment_methods['name']}}">
+                                            @else
+                                            {{$payment_methods['name']}}
+                                            @endif
+                                          </label>
+                                        </div>
+                                      @endif
 
-                                  @endforeach 
-
-                                </div>
+                                  @endforeach  --}}
                               </div>
                             </form>
                           </div>
                           <div class="button">
-                            @foreach($result['payment_methods'] as $payment_methods)
+                            {{-- @foreach($result['payment_methods'] as $payment_methods)
                           
                               @if($payment_methods['active']==1 and $payment_methods['payment_method']=='banktransfer')
                               <div class="alert alert-info alert-dismissible" id="payment_description" role="alert" style="display: none">
@@ -586,16 +615,17 @@ jQuery(document).ready(function() {
                               </div>
                               @endif
 
-                            @endforeach
+                            @endforeach --}}
 
                               <!--- paypal -->
-                              <div id="paypal_button" class="payment_btns" style="display: none"></div>
+                              {{-- <div id="paypal_button" class="payment_btns">
+                              </div> --}}
 
                                 {{-- <button id="braintree_button" style="display: none" class="btn btn-dark payment_btns" data-toggle="modal" data-target="#braintreeModel" >@lang('website.Order Now')</button> --}}
 
                                 {{-- <button id="stripe_button" class="btn btn-dark payment_btns" style="display: none" data-toggle="modal" data-target="#stripeModel" >@lang('website.Order Now')</button> --}}
 
-                                <button id="cash_on_delivery_button" class="btn btn-dark payment_btns" style="display: none">@lang('website.Order Now')</button>
+                                <button id="cash_on_delivery_button" class="btn btn-dark" type="button"> @lang('website.Order Now')</button>
                                 {{-- <button id="razor_pay_button" class="razorpay-payment-button btn btn-dark payment_btns"  style="display: none"  type="button">@lang('website.Order Now')</button>
                                 <a href="{{ URL::to('/store_paytm')}}" id="pay_tm_button" class="btn btn-dark payment_btns"  style="display: none"  type="button">@lang('website.Order Now')</a>
 
@@ -607,6 +637,7 @@ jQuery(document).ready(function() {
 
                                 <button id="midtrans_button" class="btn btn-dark payment_btns" style="display: none">@lang('website.Order Now')</button>
                                 <input type="hidden" id="midtransToken" value=""> --}}
+
                                 {{-- payment error content show --}}
                                 <div class="alert alert-danger alert-dismissible" id="payment_error" role="alert" style="display: none">
                                   <span class="sr-only">@lang('website.Error'):</span>
@@ -650,9 +681,9 @@ jQuery(document).ready(function() {
                                       </div>
                                     <div class="modal-body">
                                       <div class="from-group mb-3">
-                                        <div class="col-12"> <label for="inlineFormInputGroup">@lang('website.Full Name')</label></div>
+                                        <div class="col-12"> <label for="inlineFormInputGroup">@lang('website.First Name')</label></div>
                                         <div class="input-group col-12">
-                                          <input type="text" name="firstName" id="firstName" placeholder="@lang('website.Full Name')" class="form-control">
+                                          <input type="text" name="firstName" id="firstName" placeholder="@lang('website.First Name')" class="form-control">
                                           <span class="help-block error-content" hidden>@lang('website.Please enter your full name')</span>
                                         </div>
                                       </div>
@@ -792,7 +823,7 @@ jQuery(document).ready(function() {
 </section>
 
 <script>
-jQuery(document).on('click', '#cash_on_delivery_button, #banktransfer_button', function(e){
+jQuery(document).on('click', '#cash_on_delivery_button', function(e){
 	jQuery("#update_cart_form").submit();
 });
 </script>
@@ -812,7 +843,11 @@ if(!empty($result['settingsContent']['setting'])){
     jQuery('#delivery').click(function(e){
         e.preventDefault();
         $('#same_address_checkbox').show();
+        // $('#cop_method').hide();
+        // $('#cod_method').show();
         $("#label_SA").text("Shipping Address");
+        $("#cod-cop_value").val("cash_on_delivery");
+        $("#cod-cop_label").text("Cash On Delivery");
         var fnValue = "@if(!empty(session('shipping_address'))){{session('shipping_address')->firstname}}@endif";
         var lnValue = "@if(!empty(session('shipping_address'))){{ session('shipping_address')->lastname }}@endif";
         var cValue = "@if(!empty(session('shipping_address'))){{ session('shipping_address')->company }}@endif";
@@ -823,15 +858,15 @@ if(!empty($result['settingsContent']['setting'])){
         $("#firstname").val(fnValue);
         $("#lastname").val(lnValue);
         $("#company").val(cValue);
-        // $("#company").removeAttr('disabled');
+        $("#company").removeAttr('disabled');
         $("#street").val(aValue);
-        // $("#street").removeAttr('disabled');
+        $("#street").removeAttr('disabled');
         $("#entry_country_id").val(conValue);
-        // $("#entry_country_id").removeAttr('disabled');
+        $("#entry_country_id").removeAttr('disabled');
         // $("#entry_zone_id").val(zonValue);
         // $("#entry_zone_id").removeAttr('disabled');
         $("#city").val(city);
-        // $("#city").removeAttr('disabled');
+        $("#city").removeAttr('disabled');
         $("#delivery_phone").val(pValue);
         // $("#delivery_phone").removeAttr('disabled');
         // $.ajaxSetup({
@@ -867,8 +902,11 @@ if(!empty($result['settingsContent']['setting'])){
       jQuery('#pickup').click(function(e){
           e.preventDefault();
             $('#same_address_checkbox').hide();
+            // $('#cod_method').hide();
+            // $('#cop_method').show();
             $("#label_SA").text("Pickup Address");
-
+            $("#cod-cop_value").val("cash_on_pickup");
+            $("#cod-cop_label").text("Cash On Pickup");
             // var $firstname = "@if(!empty(session('shipping_address'))){{session('shipping_address')->firstname}}@endif";
             // var $lastname = "@if(!empty(session('shipping_address'))){{ session('shipping_address')->lastname }}@endif";
             var fnValue = "@if(!empty(session('customer_info'))){{session('customer_info')->first_name}}@endif";
@@ -886,16 +924,19 @@ if(!empty($result['settingsContent']['setting'])){
             $("#firstname").val(fnValue);
             $("#lastname").val(lnValue);
             $("#company").val(cValue);
-            // $("#company").attr('disabled','disabled');
+            $("#company").attr('disabled','disabled');
             $("#street").val(aValue);
-            // $("#street").attr('disabled','disabled');
+            $("#street").attr('disabled','disabled');
             $("#entry_country_id").val(conValue);
-            // $("#entry_country_id").attr('disabled','disabled');
+            $("#entry_country_id").attr('disabled','disabled');
             // $("#entry_zone_id").val(zonValue);
             // $("#entry_zone_id").attr('disabled','disabled');
             $("#city").val(city);
-            // $("#city").attr('disabled','disabled');
+            $("#city").attr('disabled','disabled');
             $("#delivery_phone").val(pValue);
+
+            // $("#billing_company").val(cValue);
+            // $("#billing_street").val(aValue);
             // $("#delivery_phone").attr('disabled','disabled');
           // $.ajaxSetup({
           //   headers: {
@@ -921,8 +962,8 @@ if(!empty($result['settingsContent']['setting'])){
               // $('#shipping_methods_listitem1').show();
               console.log(result);
             }
-            }});
-          });
+          }});
+        });
       });
   </script>
 

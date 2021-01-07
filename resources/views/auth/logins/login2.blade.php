@@ -118,14 +118,14 @@
 								  <button class="btn btn-secondary swipe-to-top">@lang('website.Login')</button>
 								<a href="{{ URL::to('/forgotPassword')}}" class="btn btn-link">@lang('website.Forgot Password')</a>
 
-								@if($result['checkout_button'] == 1)
+								{{-- @if($result['checkout_button'] == 1)
 									<p style="text-align:center; margin-top:30px;">
 										<strong>OR</strong>
 									</p>
 									<a href="{{url('/guest_checkout')}}" type="submit" class="btn btn-light swipe-to-top btn-block">
 										@lang('website.Guest Checkout')
 									</a>
-									@endif
+								@endif --}}
 
 							  </div>
 						</form>

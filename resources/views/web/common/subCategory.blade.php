@@ -6,7 +6,7 @@
       @foreach($cate as $key=>$category) --}}
 
         <div class="thumb">
-            <div class="product-hover d-none d-lg-block d-xl-block">
+             <div class="d-none d-lg-block d-xl-block"> {{-- class="product-hover d-none d-lg-block d-xl-block" --}}
               <div class="icons">    
 
               </div>

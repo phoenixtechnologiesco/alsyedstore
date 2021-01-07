@@ -12,6 +12,8 @@
               <p>
                 @lang('website.You have successfully place your order')
                 <a href="{{url('/view-order/'.session('orders_id'))}}" class="btn-link"><b>@lang('website.View Order Detail')</b></a>
+                <br>
+                <a href="{{url('/')}}" class="btn-link"><b>@lang('website.Redirect To Home')</b></a>
               </p>
             </div>
           </p>

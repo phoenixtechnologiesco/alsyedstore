@@ -520,7 +520,7 @@ class AdminController extends Controller
           ),
         array(
           'first_name' => 'required',
-          'last_name' => 'required',
+        //   'last_name' => '',
           'address' => 'required',
           'phone' => 'required',
           'city' => 'required',

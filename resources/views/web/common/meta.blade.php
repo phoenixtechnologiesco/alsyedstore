@@ -55,6 +55,7 @@
 		<?=stripslashes($result['commonContent']['setting'][76]->value)?>
     @endif
 <style>
+
 	.form-validate .form-row .has-error .form-control {
 		color: red !important;
 		border-color: red !important;

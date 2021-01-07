@@ -86,7 +86,7 @@ class CustomersController extends Controller
         $existEmail = $this->Customers->email($request);
         $this->validate($request, [
             'customers_firstname' => 'required',
-            'customers_lastname' => 'required',
+            // 'customers_lastname' => '',
             'customers_gender' => 'required',
             //'image_id' => 'required',
             'customers_dob' => 'required',

@@ -300,7 +300,7 @@ $(document).ready(function () {
 $.ajaxSetup({
     headers: {
         'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-    }
+	}
 });
 
 $(function () {
@@ -2574,7 +2574,12 @@ Dropzone.options.myDropzone = {
     paramName: 'file',
     maxFilesize: 5, // MB
     maxFiles: 20,
-    acceptedFiles: ".jpeg,.jpg,.png,.gif",
+	acceptedFiles: ".jpeg,.jpg,.png,.gif",
+	// uploadMultiple: true,
+	// addRemoveLinks: true,
+	// maxFiles:8,
+	// parallelUploads : 100,
+	// maxFilesize:5,
     init: function() {
         this.on("success", function(file, response) {
             var a = document.createElement('span');
@@ -2583,9 +2588,6 @@ Dropzone.options.myDropzone = {
             // a.innerHTML = "copy url";
             file.previewTemplate.appendChild(a);
 
-
-
-
         });
 
         this.on("success", function(){
@@ -2593,7 +2595,6 @@ Dropzone.options.myDropzone = {
             $("#compelete").click(function(){
 
             location.reload()})});
-
 
     }
 };

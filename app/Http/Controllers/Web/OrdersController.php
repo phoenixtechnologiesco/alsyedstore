@@ -55,13 +55,13 @@ class OrdersController extends Controller
     }
 
     //test stripe
-    public function stripeForm(Request $request)
-    {
-        $title = array('pageTitle' => Lang::get('website.Checkout'));
-        $result = array();
-        $result['commonContent'] = $this->index->commonContent();
-        return view("stripeForm", $title)->with('result', $result);
-    }
+    // public function stripeForm(Request $request)
+    // {
+    //     $title = array('pageTitle' => Lang::get('website.Checkout'));
+    //     $result = array();
+    //     $result['commonContent'] = $this->index->commonContent();
+    //     return view("stripeForm", $title)->with('result', $result);
+    // }
 
     public function guest_checkout()
     {
@@ -132,6 +132,10 @@ class OrdersController extends Controller
             if (empty(session('shipping_address'))) {
                 session(['shipping_address' => $address]);
             }
+            if (empty(session('billing_address'))) {
+                session(['billing_address' => $address]);
+                session('billing_address')->same_billing_address = 1;
+            }
 
             $pickup_address = array();
             // $getpickup_address = array();
@@ -156,6 +160,37 @@ class OrdersController extends Controller
                 $countries_id = session('shipping_address')->countries_id;
             } else {
                 $countries_id = '';
+            }
+
+            // if (empty(session('shipping_address')->city)) {
+            //     session('shipping_address')->city = 'Karachi';
+            // }
+            // if (empty(session('shipping_address')->company)) {
+            //     session('shipping_address')->company = '';
+            // }
+            // if (empty(session('shipping_address')->street)) {
+            //     session('shipping_address')->street = '';
+            // }
+            if (empty(session('billing_address')->billing_city)) {
+                session('billing_address')->billing_city = '';
+            }
+            if (empty(session('billing_address')->billing_company)) {
+                session('billing_address')->billing_company = '';
+            }
+            if (empty(session('billing_address')->billing_street)) {
+                session('billing_address')->billing_street = '';
+            }
+            if (empty(session('billing_address')->same_billing_address)) {
+                session('billing_address')->same_billing_address = 1;
+            }
+            if (empty(session('billing_address')->billing_firstname)) {
+                session('billing_address')->billing_firstname = '';
+            }
+            if (empty(session('billing_address')->billing_lastname)) {
+                session('billing_address')->billing_lastname = '';
+            }
+            if (empty(session('billing_address')->billing_phone)) {
+                session('billing_address')->billing_phone = '';
             }
 
             $result['countries'] = $this->shipping->countries();
@@ -381,18 +416,39 @@ class OrdersController extends Controller
     //place_order
     public function place_order(Request $request)
     {
-        $cust_address = "";
         if(auth()->guard('customer')->check()){
                 
-            $all_addresses = $this->shipping->getShippingAddress(array());
+            $cust_address = array();
+            $cust_address = (object)$cust_address;
+            // $all_addresses = $this->shipping->getShippingAddress(array());
             
-            if (!empty($all_addresses) and count($all_addresses)>0) {
-                foreach($all_addresses as $default_address){
-                    if($default_address->default_address==1){                        
-                        $cust_address = $default_address;
-                    }
-                }
+            // if (!empty($all_addresses) and count($all_addresses)>0) {
+            //     foreach($all_addresses as $default_address){
+            //         if($default_address->default_address==1){                        
+            //             $cust_address = $default_address;
+            //         }
+            //     }
+            // }
+            // else {
+            if(auth()->guard('customer')->user()->first_name){
+                $cust_address->firstname = auth()->guard('customer')->user()->first_name;
             }
+            else{
+                $cust_address->firstname = "";
+            }
+            if(auth()->guard('customer')->user()->last_name){
+                $cust_address->lastname = auth()->guard('customer')->user()->last_name;
+            }
+            else{
+                $cust_address->lastname = "";
+            }
+            $cust_address->company = "";
+            $cust_address->street = "";
+            $cust_address->suburb = "";
+            $cust_address->city = "Karachi";
+            $cust_address->country_name = "Pakistan";
+            // }
+
         }
 
         $payment_status = $this->order->place_order($request, $cust_address);
@@ -468,9 +524,11 @@ class OrdersController extends Controller
 
         $result = array();
         if (!empty(session('shipping_address'))) {
-            $countries_id = session('shipping_address')->countries_id;
+            // $countries_id = session('shipping_address')->countries_id;
+            $countries_id = 162;
             // $toPostalCode = session('shipping_address')->postcode;
-            $toCity = session('shipping_address')->city;
+            // $toCity = session('shipping_address')->city;
+            $toCity = "Karachi";
             $toAddress = '-';
             $countries = $this->order->getCountries($countries_id);
             $toCountry = $countries[0]->countries_iso_code_2;
@@ -754,6 +812,23 @@ class OrdersController extends Controller
         /**   END CASH ON DELIVERY**/
         /*************************/
 
+        /**   CASH ON PICKUP**/
+        //////////////////////
+
+        $payments_setting = $this->order->payments_setting_for_cop();
+
+        $cop = array(
+            'environment' => 'Live',
+            'name' => $payments_setting->name,
+            'public_key' => '',
+            'active' => $payments_setting->status,
+            'payment_currency' => Session::get('currency_code'),
+            'payment_method' => $payments_setting->payment_method,
+        );
+
+        /**   END CASH ON PICKUP**/
+        /*************************/
+
         /**   PAYPAL**/
         /*************************/
         // $payments_setting = $this->order->payments_setting_for_paypal();
@@ -912,6 +987,7 @@ class OrdersController extends Controller
         // $result[0] = $braintree;
         // $result[1] = $stripe;
         $result[0] = $cod;
+        $result[1] = $cop;
         // $result[3] = $paypal;
         // $result[4] = $instamojo;
         // $result[5] = $hyperpay;

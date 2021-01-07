@@ -1,7 +1,7 @@
 
 <div style="padding: 5px;">
   <div style="width: 100%; display: block">
-    <h2 style="font-size: 20px;border-bottom: 1px solid #eee;padding-bottom: 20px;">{{ trans('labels.OrderID') }}# {{ $ordersData['orders_data'][0]->orders_id }} <span style="
+    <h2 style="font-size: 20px;border-bottom: 1px solid #eee;padding-bottom: 20px;">{{ trans('labels.OrderID') }}# {{Carbon\Carbon::now()->year}}{{ $ordersData['orders_data'][0]->orders_id }} <span style="
     background-color: #3c8dbc;
     display: inline;
     padding: .2em .6em .3em;
@@ -27,7 +27,7 @@
       <span style="text-transform: capitalize;">{{ $ordersData['orders_data'][0]->customers_name }}</span><br>
       {{ $ordersData['orders_data'][0]->customers_company }}<br>
       {{ $ordersData['orders_data'][0]->customers_street_address }}<br>
-      {{ $ordersData['orders_data'][0]->customers_city }}, 
+      {{ $ordersData['orders_data'][0]->customers_city }}<br> 
       {{ $ordersData['orders_data'][0]->customers_country }}<br>
       {{ trans('labels.Phone') }}: {{ $ordersData['orders_data'][0]->customers_telephone }}<br>
       {{ trans('labels.Email') }}: {{ $ordersData['orders_data'][0]->email }}

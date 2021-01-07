@@ -184,6 +184,8 @@ return [
 
 	'Home'=>'Home',
 
+	'Redirect To Home'=>'Redirect To Home',
+
 	'Shopping cart'=>'Shopping cart',
 
 	'Poducts'=>'Poducts',
@@ -216,7 +218,7 @@ return [
 
 	'Apply'=>'Apply',
 
-	'Please enter your first name'=>'Please enter your first name',
+	'Please enter your first name'=>'Please enter your full name',
 
 	'Please enter your last name'=>'Please enter your last name',
 
@@ -232,7 +234,7 @@ return [
 	'Success'=>'Success',
 	'Enter Your Email or Username' => 'Please Enter Your Email or Email',
 
-	'First Name'=>'First Name',
+	'First Name'=>'Full Name',
 
 	'Last Name'=>'Last Name',
 
@@ -304,7 +306,8 @@ return [
 
 	'Order Detail'=>'Order Detail',
 
-	'Company'=>'Company',
+	'Company'=>'Shop',
+	// 'Company'=>'Company',
 
 	'Address'=>'Address',
 
@@ -318,6 +321,7 @@ return [
 
 	'Continue'=>'Continue',
 
+	'Please enter your shop name'=>'Please enter your shop name.',
 	'Please enter your company name'=>'Please enter your company name.',
 
 	'Please enter your address'=>'Please enter your address.',
@@ -354,7 +358,7 @@ return [
 
 	'Other'=>'Other',
 
-	'Shipping Methods'=>'Shipping Methods',
+	'Shipping Methods'=>'Shipping Method',
 
 	'Confirm Order'=>'Confirm Order',
 

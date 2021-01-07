@@ -723,7 +723,24 @@ jQuery('.qtypluscart').click(function(e){
 });
 
 
-	//update_cart
+//update_cart
+// jQuery(document).on('click', '#continue_cart', function(e){
+// 	jQuery('#loader').css('display','block');
+// 	jQuery("#update_cart_form").submit();
+// 	// similar behavior as clicking on a link
+// 	window.location.href = "/shop";
+// });
+
+// jQuery(document).on('click', '#update_cart', function(e){
+// 	jQuery('#loader').css('display','block');
+// 	jQuery("#update_cart_form").submit();
+// 	// // similar behavior as an HTTP redirect
+// 	// window.location.replace("/checkout");
+// 	// similar behavior as clicking on a link
+// 	window.location.href = "/checkout";
+// });
+
+//update_cart
 jQuery(document).on('click', '#update_cart', function(e){
 	jQuery('#loader').css('display','block');
 	jQuery("#update_cart_form").submit();

@@ -379,7 +379,7 @@ class CustomersController extends Controller
 
             ), array(
                 'firstName' => 'required ',
-                'lastName' => 'required',
+                // 'lastName' => '',
                 'customers_gender' => 'required',
                 'email' => 'required | email',
                 'password' => 'required',

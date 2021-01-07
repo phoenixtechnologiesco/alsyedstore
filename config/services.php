@@ -51,9 +51,9 @@ return [
 
 
     'google' => [
-      'client_id' => 'GOOGLE_CLIENT_ID',
-      'client_secret' => 'GOOGLE_SECRET_KEY',
-      'redirect' => 'http://YOUR_DOMAIN_NAME/login/google/callback',
+      'client_id' => '79516564245-n7n2o2m4vr936ceufe28sk4dnbqtqhvn.apps.googleusercontent.com',
+      'client_secret' => 'A6okgmccMxhJG6DSnyN-ojnb',
+      'redirect' => 'https://alsyedstore.com/login/google/callback',
     ],
 
 ];

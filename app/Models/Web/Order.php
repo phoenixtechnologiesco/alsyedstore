@@ -47,34 +47,34 @@ class Order extends Model
         }
 
         $date_added = date('Y-m-d h:i:s');
-        if (Session::get('guest_checkout') == 1) {
-            $email = session('shipping_address')->email;
-            $check = DB::table('users')->where('role_id', 2)->where('email', $email)->first();
-            if ($check == null) {
-                $customers_id = DB::table('users')
-                    ->insertGetId([
-                        'role_id' => 2,
-                        'email' => $email = session('shipping_address')->email,
-                        'password' => Hash::make('12345678'),
-                        'first_name' => session('shipping_address')->firstname,
-                        'last_name' => session('shipping_address')->lastname,
-                        'phone' => session('billing_address')->billing_phone,
-                    ]);
-                session(['customers_id' => $customers_id]);
-            } else {
-                $customers_id = $check->id;
-                $email = $check->email;
-                $customers_telephone = $check->phone;
-                $customers_firstname = $cust_address->firstname;
-                $customers_lastname = $cust_address->lastname;
-                $customers_company = $cust_address->company;
-                $customers_street = $cust_address->street;
-                $customers_suburb = $cust_address->suburb;
-                $customers_city = $cust_address->city;
-                $customers_country = $cust_address->country_name;
-                session(['customers_id' => $customers_id, 'customers_telephone' => $customers_telephone]);
-            }
-        } else {
+        // if (Session::get('guest_checkout') == 1) {
+        //     $email = session('shipping_address')->email;
+        //     $check = DB::table('users')->where('role_id', 2)->where('email', $email)->first();
+        //     if ($check == null) {
+        //         $customers_id = DB::table('users')
+        //             ->insertGetId([
+        //                 'role_id' => 2,
+        //                 'email' => $email = session('shipping_address')->email,
+        //                 'password' => Hash::make('12345678'),
+        //                 'first_name' => session('shipping_address')->firstname,
+        //                 'last_name' => session('shipping_address')->lastname,
+        //                 'phone' => session('billing_address')->billing_phone,
+        //             ]);
+        //         session(['customers_id' => $customers_id]);
+        //     } else {
+        //         $customers_id = $check->id;
+        //         $email = $check->email;
+        //         $customers_telephone = $check->phone;
+        //         $customers_firstname = $cust_address->firstname;
+        //         $customers_lastname = $cust_address->lastname;
+        //         $customers_company = $cust_address->company;
+        //         $customers_street = $cust_address->street;
+        //         $customers_suburb = $cust_address->suburb;
+        //         $customers_city = $cust_address->city;
+        //         $customers_country = $cust_address->country_name;
+        //         session(['customers_id' => $customers_id, 'customers_telephone' => $customers_telephone]);
+        //     }
+        // } else {
             $customers_id = auth()->guard('customer')->user()->id;
             $email = auth()->guard('customer')->user()->email;
             if(auth()->guard('customer')->check()){
@@ -88,7 +88,7 @@ class Order extends Model
             $customers_suburb = $cust_address->suburb;
             $customers_city = $cust_address->city;
             $customers_country = $cust_address->country_name;
-        }
+        // }
         $delivery_company;
         if (!empty(session('shipping_address')->company)) {
             $delivery_company = session('shipping_address')->company;
@@ -213,6 +213,15 @@ class Order extends Model
 
         if ($payment_method == 'cash_on_delivery'){
             $payments_setting = $this->payments_setting_for_cod();
+    
+            $payment_method_name = $payments_setting->name;
+            $payment_status = 'success';
+        }
+
+        //payment methods
+
+        if ($payment_method == 'cash_on_pickup'){
+            $payments_setting = $this->payments_setting_for_cop();
     
             $payment_method_name = $payments_setting->name;
             $payment_status = 'success';
@@ -829,6 +838,19 @@ class Order extends Model
             ->where('payment_description.payment_methods_id', 4)
             ->orwhere('language_id', 1)
             ->where('payment_description.payment_methods_id', 4)
+            ->first();
+        return $payments_setting;
+    }
+
+    public function payments_setting_for_cop()
+    {
+        $payments_setting = DB::table('payment_description')
+            ->leftjoin('payment_methods', 'payment_methods.payment_methods_id', '=', 'payment_description.payment_methods_id')
+            ->select('payment_description.name', 'payment_methods.environment', 'payment_methods.status', 'payment_methods.payment_method')
+            ->where('language_id', session('language_id'))
+            ->where('payment_description.payment_methods_id', 12)
+            ->orwhere('language_id', 1)
+            ->where('payment_description.payment_methods_id', 12)
             ->first();
         return $payments_setting;
     }

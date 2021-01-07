@@ -97,7 +97,8 @@
                           </ul>
                         </div>
                         <div class="footer-image mt-4">
-                          Cash On Delivery
+                          @lang('labels.CashOnDelivery')
+                          @lang('labels.CashOnPickup')
                             {{-- <a href="#"><img class="img-fluid" src="{{asset('web/images/miscellaneous/payments.png')}}"></a> --}}
                         </div>
                       </div>

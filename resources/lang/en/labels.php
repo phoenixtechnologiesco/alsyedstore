@@ -519,7 +519,8 @@ return [
 	'Telephone' => 'Telephone',
 	'Fax' => 'Fax',
 	'Devices' => 'Devices',
-	'Company' => 'Company',
+	'Company' => 'Shop',
+	// 'Company' => 'Company',
 	'DeleteCustomer' => 'Delete Customer',
 	'DeleteCustomerText' => 'Are you sure you want to delete this customer?',
 	'DOB' => 'DOB',
@@ -530,8 +531,8 @@ return [
 	'EditCustomer' => 'Edit Customer',
 	'DeleteCustomerMessage' => 'Customer has been deleted successfully!',
 
-	'FirstName' => 'First Name',
-	'FirstNameText' => 'Please enter first name.',
+	'FirstName' => 'Full Name',
+	'FirstNameText' => 'Please enter full name.',
 	'LastName' => 'Last Name',
 	'lastNameText' => 'Please enter last name.',
 	'Gender' => 'Gender',
@@ -836,6 +837,7 @@ return [
 	'PaymentMetods' => 'Payment Metods',
 	'PaymentMetodsText' => 'Choose Payment methods.',
 	'CashOnDelivery' => 'Cash On Delivery',
+	'CashOnPickup' => 'Cash On Pickup',
 	'Stripe' => 'Stripe',
 	'Brantree' => 'Braintree',
 	'CustomerOrdersTotal' => 'CustomerOrdersTotal',
@@ -970,8 +972,8 @@ return [
 	'SelectZoneText' => 'Please enter your state.',
 	'CountryText' => 'Please enter your country.',
 	'AdminLastNameText' => 'Please enter your last name.',
-	'AdminFirstName' => 'First Name',
-	'AdminFirstNameText' => 'Please enter your first name.',
+	'AdminFirstName' => 'Full Name',
+	'AdminFirstNameText' => 'Please enter your full name.',
 	'Success' => 'Success!',
 	'EmailPasswordIncorrectText' => 'Email or password is incorrect!',
 	'AdminEmailText' => 'Please enter your valid email address.',
@@ -981,6 +983,9 @@ return [
 
 	'CashOnDelivery' => 'Cash On Delivery',
 	'CashOnDeliveryText' => 'Enter Cash on delivery name.',
+
+	'CashOnPickup' => 'Cash On Pickup',
+	'CashOnPickupText' => 'Enter Cash on pickup name.',
 
 	'paypal' => 'Paypal',
 	'paypalEnviroment' => 'Paypal Enviroment',
@@ -1230,6 +1235,7 @@ return [
 	'StripeName'=>'Stripe Name',
 	'paypalName'=>'Paypal Name',
 	'CashOnDeliveryName'=>'COD Name',
+	'CashOnPickupName'=>'COP Name',
 
 	'braintreeCard'=>'Credit Card',
 	'2nd Day Air'=>'2nd Day Air',
